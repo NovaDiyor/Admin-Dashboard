@@ -78,7 +78,7 @@ class Statics(models.Model):
 
 class Table(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
-    year = models.PositiveIntegerField(max_length=4)
+    year = models.PositiveIntegerField()
     statics = models.ManyToManyField(Statics)
 
 
