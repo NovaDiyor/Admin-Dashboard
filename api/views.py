@@ -1,5 +1,5 @@
 from main.models import *
-from rest_framework import authentication, permissions
+from rest_framework import authentication
 from django.contrib.auth import login, logout, authenticate
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
@@ -9,14 +9,17 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from bot.main import *
 
+# login
+
 
 @api_view(['POST'])
 def register(request):
     try:
         username = request.data['username']
         password = request.data['password']
-        country = request.data['country']
-        users = User.objects.create_user(username=username, password=password, country=country )
+        number = request.data.get('number')
+        email = request.data.get('email')
+        users = User.objects.create_user(username=username, password=password, number=number, email=email, status=2)
         token = Token.objects.create(user=users)
         data = {
             'username': username,
@@ -24,13 +27,12 @@ def register(request):
             'token': token.key,
         }
         return Response(data)
-
     except Exception as err:
         return Response({'error': f'{err}'})
 
 
 @api_view(['POST'])
-def login(request):
+def login_api(request):
     try:
         username = request.data['username']
         password = request.data['password']
@@ -38,7 +40,6 @@ def login(request):
             usr = User.objects.get(username=username)
             user = authenticate(username=username, password=password)
             if user is not None:
-                status = 200
                 token, created = Token.objects.get_or_create(user=user)
                 data = {
                     'username': username,
@@ -64,6 +65,84 @@ def login(request):
         return Response({"error": f'{er}'})
 
 
+@api_view(['POST'])
+def logout_api(request):
+    logout(request)
+    return Response('You logout!')
+
+# Models Get
+
+
+@api_view(['GET'])
+def user_api(request):
+    try:
+        user = User.objects.all()
+        usr = UserOne(user, many=True).data
+        data = {
+            'users': usr
+        }
+        return Response(data)
+    except Exception as err:
+        return Response(f'error: {err}')
+
+
+@api_view(['GET'])
+def info_api(request):
+    context = {
+        'info': InfoOne(Info.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def ads_api(request):
+    context = {
+        'our advertisers': AdsOne(Ads.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def slider_api(request):
+    context = {
+        'slider': SliderOne(Slider.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def report_api(request):
+    context = {
+        'report': ReportOne(Report.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def video_api(request):
+    video = Report.objects.filter(is_video=True)
+    context = {
+        'video': ReportOne(video, many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def news_api(request):
+    context = {
+        'news': NewOne(News.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def league_api(request):
+    context = {
+        'league': LeagueOne(League.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
 @api_view(['GET'])
 def club_api(request):
     context = {
@@ -73,22 +152,89 @@ def club_api(request):
 
 
 @api_view(['GET'])
-def news_api(request):
-    news = News.objects.all().order_by('-date')
+def player_api(request):
     context = {
-        'news': NewOne(news, many=True).data
+        'player': PlayerOne(Player.objects.all(), many=True).data
     }
     return Response(context)
 
 
 @api_view(['GET'])
-def video_api(request):
-    report = Report.objects.all()
-    for i in report:
-        if i.video is not None:
-            videos = i
+def staff_api(request):
     context = {
-        'video': Report(videos, many=True).data
+        'staff': StaffOne(Staff.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def game_api(request):
+    context = {
+        'game': GameOne(Game.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def subs_api(request):
+    context = {
+        'substitute': SubOne(Substitute.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def line_api(request):
+    context = {
+        'line': LineOne(Line.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def action_api(request):
+    context = {
+        'action': ActionOne(Action.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def goal_api(request):
+    context = {
+        'goal': GoalOne(Goal.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def passes_api(request):
+    context = {
+        'passes': PassOne(Passes.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def statics_api(request):
+    context = {
+        'static': StaticOne(Statics.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def table_api(request):
+    context = {
+        'table': TableOne(Table.objects.all(), many=True).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def detail_api(request):
+    context = {
+        'detail': DetailOne(Detail.objects.all(), many=True).data
     }
     return Response(context)
 
@@ -103,26 +249,60 @@ def product_api(request):
 
 
 @api_view(['GET'])
-def about_api(request):
+def wishlist_api(request):
     context = {
-        'news': NewOne(News.objects.all()).data
+        'wishlist': WishlistOne(Wishlist.objects.all(), many=True).data
     }
     return Response(context)
 
 
 @api_view(['GET'])
-def single_product(request, pk):
+def region_api(request):
     context = {
-        'single': ProductOne(Product.objects.get(id=pk)).data,
-        'related': ProductOne(Product.objects.filter(rating=5), many=True).data
+        'region': RegionOne(Region.objects.all(), many=True).data
     }
     return Response(context)
 
 
 @api_view(['GET'])
-def single_news(request, pk):
+def order_item_api(request):
     context = {
-        'news': NewOne(News.objects.get(id=pk)).data,
+        'order-item': OrderItemOne(OrderItem.objects.all()).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def order_api(request):
+    context = {
+        'order': OrderOne(Order.objects.all()).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def chat_api(request):
+    context = {
+        'chat': ChatOne(Chat.objects.all()).data
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def telegram_api(request):
+    context = {
+        'telegram': TelegramOne(Telegram.objects.all()).data
+    }
+    return Response(context)
+
+# single
+
+
+@api_view(['GET'])
+def single_user(request, pk):
+    user = User.objects.get(id=pk)
+    context = {
+        'single': UserOne(user).data,
     }
     return Response(context)
 
@@ -130,15 +310,92 @@ def single_news(request, pk):
 @api_view(['GET'])
 def single_report(request, pk):
     context = {
-        'singe': ReportOne(Report.objects.get(id=pk)).data,
+        'single': ReportOne(Report.objects.get(id=pk)).data,
     }
     return Response(context)
+
+
+@api_view(['GET'])
+def single_video(request, pk):
+    context = {
+        'single': ReportOne(Report.objects.get(id=pk, is_video=True)).data,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def single_news(request, pk):
+    context = {
+        'single': NewOne(News.objects.get(id=pk)).data,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def single_table(request, pk):
+    table = Table.objects.get(id=pk)
+    statics = table.statics.all()
+    tl = []
+    try:
+        league = {
+            'name': table.league.name,
+            'year': table.year,
+        }
+        print(league)
+        for i in statics:
+            context = {
+                'club': i.club.name,
+                'game': i.game,
+                'win': i.win,
+                'draw': i.draw,
+                'lose': i.lose,
+                'score': i.score,
+                'conceded': i.conceded,
+                'point': i.point
+            }
+            tl.append(context)
+        data = {
+            'table': league,
+            'stats': tl
+        }
+        print(tl, data, context)
+        return Response(data)
+    except Exception as err:
+        return Response(f'err: {err}')
+
+
+@api_view(['GET'])
+def single_player(request, pk):
+    context = {
+        'single': PlayerOne(Player.objects.get(id=pk)).data,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def single_game(request, pk):
+    context = {
+        'single': GameOne(Game.objects.get(id=pk)).data,
+    }
+    return Response(context)
+
+
+@api_view(['GET'])
+def single_product(request, pk):
+    product = Product.objects.get(id=pk)
+    context = {
+        'single': ProductOne(product).data,
+        'related': ProductOne(Product.objects.filter(rating=product.rating), many=True).data
+    }
+    return Response(context)
+
+# add
 
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def add_wishlist(request, pk):
+def add_wishlist(request):
     user = request.user
     product = request.POST.get('product')
     Wishlist.objects.create(user=user, product_id=product)
@@ -148,17 +405,18 @@ def add_wishlist(request, pk):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def order_item_create(request, pk):
-    product = Product.objects.get(id=pk)
+def add_order_item(request):
+    product = request.POST.get('product')
     quantity = request.POST.get('quantity')
-    OrderItem.objects.create(product=product, quantity=quantity)
-    return Response(f'{product} added to order')
+    OrderItem.objects.create(product_id=product, quantity=quantity)
+    pro = Product.objects.get(id=product)
+    return Response(f'{pro} added to order')
 
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def order_create(request):
+def add_order(request):
     order = request.POST.getlist('order')
     user = request.user
     users = User.objects.get(id=user.id)
@@ -184,54 +442,3 @@ def order_create(request):
         else:
             pass
     return Response('Done, Our admins will message to you')
-
-
-# @api_view(['GET'])
-# def game_view(request):
-#     context = {
-#         'game': GameSerializer(Game.objects.all(), many=True).data,
-#     }
-#     return Response(context)
-
-
-@api_view(['GET'])
-def game_chart(request):
-    game = 0
-    won = 0
-    draw = 0
-    lose = 0
-    scored = 0
-    conceded = 0
-    point = 0
-    game = Game.objects.all()
-    for i in game:
-        if i.guest_goal > i.host_goal:
-            game += 1
-            won += 1
-            scored += i.guest_goal
-            conceded += i.host_goal
-            point += 3
-        elif i.guest_goal == i.host_goal:
-            game += 1
-            draw += 1
-            scored += i.guest_goal
-            conceded += i.host_goal
-            point += 1
-        elif i.guest_goal < i.host_goal:
-            game += 1
-            lose += 1
-            scored += i.guest_goal
-            conceded += i.host_goal
-        context = {
-            'game': game,
-            'won': won,
-            'draw': draw,
-            'lose': lose,
-            'score': scored,
-            'conceded': conceded,
-            'point': point,
-        }
-    return Response(context)
-
-
-

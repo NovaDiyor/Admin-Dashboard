@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.shortcuts import get_object_or_404
 
 
 class User(AbstractUser):
@@ -64,6 +63,10 @@ class Club(models.Model):
     name = models.CharField(max_length=210)
     logo = models.ImageField(upload_to='club/')
     league = models.ForeignKey(League, on_delete=models.SET_NULL, null=True, blank=True)
+
+
+class Statics(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, blank=True)
     game = models.IntegerField(default=0)
     win = models.IntegerField(default=0)
     draw = models.IntegerField(default=0)
@@ -71,6 +74,12 @@ class Club(models.Model):
     score = models.IntegerField(default=0)
     conceded = models.IntegerField(default=0)
     point = models.IntegerField(default=0)
+
+
+class Table(models.Model):
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    year = models.PositiveIntegerField(max_length=4)
+    statics = models.ManyToManyField(Statics)
 
 
 class Player(models.Model):
@@ -117,6 +126,23 @@ class Line(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
 
+class Passes(models.Model):
+    all = models.IntegerField()
+    successful = models.IntegerField()
+    percent = models.IntegerField(null=True, blank=True)
+    status = models.IntegerField(choices=(
+        (1, 'passes'),
+        (2, 'long-passes'),
+        (3, 'helps'),
+        (4, 'crosses')
+    ))
+
+    def save(self, *args, **kwargs):
+        percent = self.successful % self.all * 100
+        self.percent = percent
+        super(Passes, self).save(*args, **kwargs)
+
+
 class Substitute(models.Model):
     squad = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_out')
     line = models.ForeignKey(Line, on_delete=models.CASCADE, related_name='player_on')
@@ -135,34 +161,6 @@ class Goal(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, blank=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.minute < 100:
-            if self.club == self.game.host:
-                if self.player.club == self.club:
-                    self.player.goals += 1
-                    self.club.score += 1
-                    self.game.host_goal += 1
-                    self.game.save()
-                    self.player.save()
-                    self.club.save()
-                else:
-                    print('wrong player')
-            elif self.club == self.game.guest:
-                if self.player.club == self.club:
-                    self.player.goals += 1
-                    self.club.score += 1
-                    self.game.guest_goal += 1
-                    self.game.save()
-                    self.player.save()
-                    self.club.save()
-                else:
-                    print('wrong player')
-            else:
-                print('wrong game')
-        else:
-            print('under 100 minute')
-        super(Goal, self).save(*args, **kwargs)
 
 
 class Detail(models.Model):
