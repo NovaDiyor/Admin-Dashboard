@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+        <title>Admin Dashboard</title>
+        <link rel="stylesheet" href="{% static 'assets/css/app.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/bootstrap-daterangepicker/daterangepicker.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/select2/dist/css/select2.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/jquery-selectric/selectric.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/bootstrap-timepicker/css/bootstrap-timepicker.min.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/bundles/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+        <link rel='shortcut icon' type='image/x-icon' href='{% static "assets/favicon.ico"  %}'/>
+    </head>
+    <body>
+        <div id="app">
+            <div class="main-wrapper main-wrapper-1">
+                <div class="navbar-bg"></div>
+                <nav class="navbar navbar-expand-lg main-navbar sticky">
+                    <div class="form-inline mr-auto">
+                        <ul class="navbar-nav mr-3">
+                            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg collapse-btn"> <i data-feather="align-justify"></i></a></li>
+                            <li><a href="#" class="nav-link nav-link-lg fullscreen-btn"><i data-feather="maximize"></i></a></li>
+                            <li>
+                                <form class="form-inline mr-auto" method="post" action="{% url 'search' %}">
+                                    {% csrf_token %}
+                                        <div class="search-element">
+                                            <input class="form-control" type="search" placeholder="Search" name="name" aria-label="Search" data-width="200">
+                                            <button class="btn" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="navbar-nav navbar-right">
+                        <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image" src="{% static 'assets/img/user-1.png' %}" class="user-img-radious-style rounded-circle"> <span class="d-sm-none d-lg-inline-block"></span></a>
+                            <div class="dropdown-menu dropdown-menu-right pullDown">
+                                <div class="dropdown-title">Hello {{ user }}</div>
+                                <a href="{% url 'profile' user.id %}" class="dropdown-item has-icon"><i class="far fa-user"></i>Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{% url 'logout' %}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="main-sidebar sidebar-style-2">
+                    <aside id="sidebar-wrapper">
+                        <div class="sidebar-brand">
+                            <a href="{% url 'dashboard' %}"> <img alt="image" src="{% static 'assets/favicon.ico' %}" class="header-logo"/>
+                                <span class="logo-name">FC Andijon</span>
+                            </a>
+                        </div>
+                        <ul class="sidebar-menu">
+                            <li class="menu-header">Main</li>
+                            {% if request.path == "/dashboard/" %}
+                                <li class="dropdown active">
+                                    <a href="{% url 'dashboard' %}" class="nav-link"><i data-feather="monitor"></i><span>Dashboard</span></a>
+                                </li>
+                            {% else %}
+                                <li class="dropdown">
+                                    <a href="{% url 'dashboard' %}" class="nav-link"><i data-feather="monitor"></i><span>Dashboard</span></a>
+                                </li>
+                            {% endif %}
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="home"></i><span>Our Team</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{% url 'staff' %}">Staff</a></li>
+                                    <li><a class="nav-link" href="{% url 'player' %}">Players</a></li>
+                                    <li><a class="nav-link" href="{% url 'add-stadium' %}">Stadium</a></li>
+                                    <li><a class="nav-link" href="{% url 'fc' %}">Andijon</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="tv"></i><span>Game</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{% url 'club' %}">Club</a></li>
+                                    <li><a class="nav-link" href="{% url 'preview' %}">Preview</a></li>
+                                    <li><a class="nav-link" href="{% url 'squad' %}">Squad</a></li>
+                                    <li><a class="nav-link" href="{% url 'line' %}">Line</a></li>
+                                    <li><a class="nav-link" href="{% url 'subs' %}">Substitute</a></li>
+                                    <li><a class="nav-link" href="{% url 'game' %}">Game</a></li>
+                                    <li><a class="nav-link" href="{% url 'add-passes' %}">Passes</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="layout"></i><span>Models</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{% url 'news' %}">News</a></li>
+                                    <li><a class="nav-link" href="{% url 'info' %}">Info</a></li>
+                                    <li><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                                    <li><a class="nav-link" href="{% url 'region' %}">Region</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="image"></i><span>Images</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{% url 'advertiser' %}">Advertisers</a></li>
+                                    <li><a class="nav-link" href="{% url 'add-stadium-image' %}">Stadium-Image</a></li>
+                                    <li><a class="nav-link" href="{% url 'video' %}">Videos</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shopping-cart"></i><span>Product</span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link" href="{% url 'add-size' %}">Size</a></li>
+                                    <li><a class="nav-link" href="{% url 'add-images' %}">Images</a></li>
+                                    <li><a class="nav-link" href="{% url 'product' %}">Product</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+        <footer class="main-footer">
+            <div class="footer-left">
+                <a href="mailto://dbdmjkf@gmail.com">DIYOR aka Nova</a></a>
+            </div>
+            <div class="footer-right"></div>
+        </footer>
+        <script src="{% static 'assets/js/app.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/cleave-js/dist/cleave.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/cleave-js/dist/addons/cleave-phone.us.js' %}"></script>
+        <script src="{% static 'assets/bundles/jquery-pwstrength/jquery.pwstrength.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+        <script src="{% static 'assets/bundles/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/bootstrap-timepicker/js/bootstrap-timepicker.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/select2/dist/js/select2.full.min.js' %}"></script>
+        <script src="{% static 'assets/bundles/jquery-selectric/jquery.selectric.min.js' %}"></script>
+        <script src="{% static 'assets/js/page/forms-advanced-forms.js' %}"></script>
+        <script src="{% static 'assets/js/scripts.js' %}"></script>
+        <script src="{% static 'assets/js/custom.js' %}"></script>
+    </body>
+</html>

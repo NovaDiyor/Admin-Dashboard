@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Andijon-FC Dashboard</title>
+    <link rel="stylesheet" href="{% static 'assets/css/app.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+    <link rel='shortcut icon' type='image/x-icon' href='{% static "assets/img/favicon.ico" %}' />
+</head>
+<body>
+    <div id="app">
+        <section class="section">
+            <div class="container mt-5">
+                <div class="page-error">
+                    <div class="page-inner">
+                        <h1>404</h1>
+                        <div class="page-description">
+                            The page you were looking for could not be found.
+                        </div>
+                        <div class="page-search">
+                            <div class="new-input">
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'dashboard' %}"><button class="btn btn-primary btn-lg">Back to Dashboard</button></a>
+                                {% else %}
+                                    <a href="{% url 'login' %}"><button class="btn btn-primary btn-lg">Back to Login</button></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="{% static 'assets/js/app.min.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+</body>
+</html>

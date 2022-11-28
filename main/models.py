@@ -35,6 +35,7 @@ class Report(models.Model):
     video = models.FileField(upload_to='report/', null=True, blank=True)
     is_video = models.BooleanField(default=False)
     is_top = models.BooleanField(default=False)
+    is_news = models.BooleanField(default=False)
     date = models.DateTimeField()
     bio = models.CharField(max_length=210)
     author = models.CharField(max_length=210)
@@ -46,12 +47,6 @@ class Report(models.Model):
             is_video = False
         self.is_video = is_video
         super(Report, self).save(*args, **kwargs)
-
-
-class News(models.Model):
-    img = models.ImageField(upload_to='news/', null=True, blank=True)
-    text = models.TextField()
-    title = models.CharField(max_length=210)
 
 
 class League(models.Model):
@@ -75,6 +70,16 @@ class Statics(models.Model):
     conceded = models.IntegerField(default=0)
     point = models.IntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        all = int(self.win) + int(self.draw) + int(self.lose)
+        try:
+            if self.game == all:
+                super(Statics, self).save(*args, **kwargs)
+            else:
+                super(Statics, self).delete(*args, **kwargs)
+        except:
+            super(Statics, self).clean()
+
 
 class Table(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
@@ -86,42 +91,63 @@ class Player(models.Model):
     club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=210)
     l_name = models.CharField(max_length=210)
-    number = models.IntegerField()
+    number = models.IntegerField(null=True, blank=True)
     position = models.IntegerField(choices=(
         (1, 'GK'),
         (2, 'RB'), (3, 'CB'), (4, 'LB'),
         (5, 'CMD'), (6, 'MD'),
-        (7, 'RW'), (8, 'LW'), (9, 'ST')
+        (7, 'RW'), (8, 'LW'), (9, 'ST'),
+        (10, 'trainer'), (11, 'sub-trainer'), (12, 'analytic')
     ))
+    is_staff = models.BooleanField(default=False)
     birth = models.DateField()
     img = models.ImageField(upload_to='players/')
     goals = models.IntegerField(default=0)
 
-
-class Staff(models.Model):
-    name = models.CharField(max_length=210)
-    l_name = models.CharField(max_length=210)
-    birth = models.DateField()
-    role = models.IntegerField(choices=(
-        (1, 'trainer'),
-        (2, 'sub-trainer'),
-        (3, 'analytic'),
-        (4, 'admin')
-    ))
-    img = models.ImageField(upload_to='staff/')
-    club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, blank=True)
+    def save(self, *args, **kwargs):
+        if self.position == 10:
+            is_staff = True
+            self.number = None
+        elif self.position == 11:
+            is_staff = True
+            self.number = None
+        elif self.position == 12:
+            is_staff = True
+            self.number = None
+        elif self.number:
+            is_staff = False
+        elif self.number is None:
+            if self.position == 10:
+                is_staff = True
+                self.number = None
+            elif self.position == 11:
+                is_staff = True
+                self.number = None
+            elif self.position == 12:
+                is_staff = True
+                self.number = None
+            else:
+                is_staff = False
+                self.number = 1
+        else:
+            is_staff = False
+            self.number = 1
+        self.is_staff = is_staff
+        super(Player, self).save(*args, **kwargs)
 
 
 class Game(models.Model):
     date = models.DateTimeField()
-    is_played = models.BooleanField(default=False)
+    status = models.IntegerField(choices=((1, 'not-started'), (2, 'playing'), (3, 'played')))
     guest = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='guest')
     host = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='host')
     guest_goal = models.IntegerField(default=0)
     host_goal = models.IntegerField(default=0)
+    mvp = models.ForeignKey(Player, on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class Line(models.Model):
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
     team = models.ManyToManyField(Player)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
@@ -130,6 +156,8 @@ class Passes(models.Model):
     all = models.IntegerField()
     successful = models.IntegerField()
     percent = models.IntegerField(null=True, blank=True)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     status = models.IntegerField(choices=(
         (1, 'passes'),
         (2, 'long-passes'),
@@ -145,15 +173,9 @@ class Passes(models.Model):
 
 class Substitute(models.Model):
     squad = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_out')
-    line = models.ForeignKey(Line, on_delete=models.CASCADE, related_name='player_on')
-    minute = models.IntegerField()
-
-
-class Action(models.Model):
-    minute = models.IntegerField()
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    action = models.IntegerField(choices=((1, 'red-card'), (2, 'yellow-card')))
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    line = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_on')
+    minute = models.IntegerField()
 
 
 class Goal(models.Model):
@@ -165,8 +187,17 @@ class Goal(models.Model):
 
 class Detail(models.Model):
     detail = models.CharField(max_length=210, null=True, blank=True)
-    img = models.ImageField(upload_to='product/')
-    is_img = models.BooleanField()
+    img = models.ImageField(upload_to='product/', null=True, blank=True)
+    is_img = models.BooleanField(default=False)
+    is_order = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.img:
+            is_img = True
+        else:
+            is_img = False
+        self.is_img = is_img
+        super(Detail, self).save(*args, **kwargs)
 
 
 class Product(models.Model):
@@ -190,10 +221,6 @@ class Wishlist(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 
-class Region(models.Model):
-    name = models.CharField(max_length=210)
-
-
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
@@ -208,7 +235,7 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     postal = models.CharField(max_length=255)
     email = models.EmailField()
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
+    region = models.ForeignKey(Detail, on_delete=models.CASCADE)
     city = models.CharField(max_length=210)
     status = models.IntegerField(choices=(
         (0, 'accepted'),
@@ -218,9 +245,9 @@ class Order(models.Model):
 
 
 class Chat(models.Model):
-    chat_id = models.CharField(max_length=1000)
+    chat = models.CharField(max_length=1000)
 
 
 class Telegram(models.Model):
     bot_token = models.CharField(max_length=1000)
-    chat_id = models.ManyToManyField(Chat)
+    chat = models.ManyToManyField(Chat)

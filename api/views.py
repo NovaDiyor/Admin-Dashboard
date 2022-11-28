@@ -130,7 +130,7 @@ def video_api(request):
 @api_view(['GET'])
 def news_api(request):
     context = {
-        'news': NewOne(News.objects.all(), many=True).data
+        'news': NewOne(Report.objects.filter(is_news=True), many=True).data
     }
     return Response(context)
 
@@ -162,7 +162,7 @@ def player_api(request):
 @api_view(['GET'])
 def staff_api(request):
     context = {
-        'staff': StaffOne(Staff.objects.all(), many=True).data
+        'staff': StaffOne(Player.objects.filter(is_staff=True), many=True).data
     }
     return Response(context)
 
@@ -187,14 +187,6 @@ def subs_api(request):
 def line_api(request):
     context = {
         'line': LineOne(Line.objects.all(), many=True).data
-    }
-    return Response(context)
-
-
-@api_view(['GET'])
-def action_api(request):
-    context = {
-        'action': ActionOne(Action.objects.all(), many=True).data
     }
     return Response(context)
 
@@ -252,14 +244,6 @@ def product_api(request):
 def wishlist_api(request):
     context = {
         'wishlist': WishlistOne(Wishlist.objects.all(), many=True).data
-    }
-    return Response(context)
-
-
-@api_view(['GET'])
-def region_api(request):
-    context = {
-        'region': RegionOne(Region.objects.all(), many=True).data
     }
     return Response(context)
 
@@ -326,7 +310,7 @@ def single_video(request, pk):
 @api_view(['GET'])
 def single_news(request, pk):
     context = {
-        'single': NewOne(News.objects.get(id=pk)).data,
+        'single': NewOne(Report.objects.get(id=pk)).data,
     }
     return Response(context)
 

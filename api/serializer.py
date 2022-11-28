@@ -34,8 +34,8 @@ class ReportOne(serializers.ModelSerializer):
 
 class NewOne(serializers.ModelSerializer):
     class Meta:
-        model = News
-        fields = "__all__"
+        model = Report
+        fields = ['img', 'bio', 'author', 'date']
 
 
 class LeagueOne(serializers.ModelSerializer):
@@ -58,8 +58,8 @@ class PlayerOne(serializers.ModelSerializer):
 
 class StaffOne(serializers.ModelSerializer):
     class Meta:
-        model = Staff
-        fields = "__all__"
+        model = Player
+        fields = ['club', 'name', 'l_name', 'birth', 'position', 'img']
 
 
 class GameOne(serializers.ModelSerializer):
@@ -77,12 +77,6 @@ class SubOne(serializers.ModelSerializer):
 class LineOne(serializers.ModelSerializer):
     class Meta:
         model = Line
-        fields = "__all__"
-
-
-class ActionOne(serializers.ModelSerializer):
-    class Meta:
-        model = Action
         fields = "__all__"
 
 
@@ -125,12 +119,6 @@ class ProductOne(serializers.ModelSerializer):
 class WishlistOne(serializers.ModelSerializer):
     class Meta:
         model = Wishlist
-        fields = "__all__"
-
-
-class RegionOne(serializers.ModelSerializer):
-    class Meta:
-        model = Region
         fields = "__all__"
 
 
