@@ -2,6 +2,7 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
+from django.core.mail import send_mail
 
 
 def page_404(request):

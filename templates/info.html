@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Logo</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Phone</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Instagram link</th>
+                                        <th scope="col">Telegram link</th>
+                                        <th scope="col">Facebook link</th>
+                                        <th scope="col">Youtube link</th>
+                                        <th scope="col">Twitter link</th>
+                                        <th scope="col">Update</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in info %}
+                                        <tr>
+                                            <td><img alt="{{ i.logo }}" src="{{ i.logo.url }}" class="rounded-circle" width="50" data-toggle="tooltip"></td>
+                                            <td>{{ i.bio }}</td>
+                                            <td>{{ i.phone }}</td>
+                                            <td>{{ i.email }}</td>
+                                            <td>{{ i.insta }}</td>
+                                            <td>{{ i.tg }}</td>
+                                            <td>{{ i.fb }}</td>
+                                            <td>{{ i.yt }}</td>
+                                            <td>{{ i.tw }}</td>
+                                            <td><a href="{% url 'update-info' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                            <td><a href="{% url 'delete-info' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'add-info' %}"><button class="btn btn-success">Add Info</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
