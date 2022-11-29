@@ -329,6 +329,13 @@ def add_report(request):
         date = request.POST.get('date')
         bio = request.POST.get('bio')
         author = request.POST.get('author')
+        if is_video is None:
+            is_video = False
+        if is_news is None:
+            is_news = False
+        if is_top is None:
+            is_top = False
+        print(img, video)
         Report.objects.create(img=img, video=video, is_video=is_video, is_top=is_top, is_news=is_news, date=date, bio=bio, author=author)
         return redirect('add-report')
     return render(request, 'add-report.html')

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Video</th>
+                                        <th scope="col">Is-Video</th>
+                                        <th scope="col">Is-Top</th>
+                                        <th scope="col">Is-News</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Author</th>
+                                        <th scope="col">Update</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in report %}
+                                        <tr>
+                                            {% if i.img %}
+                                                <td><img alt="{{ i.img }}" src="{{ i.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></td>
+                                            {% else %}
+                                                <td>None</td>
+                                            {% endif %}
+                                            {% if i.is_video == True %}
+                                                <td><video width="20" controls><source src="{{ i.video.url }}" type="video/mp4">smth</video></td>
+                                            {% else %}
+                                                <td>None</td>
+                                            {% endif %}
+                                            <td>{{ i.is_video }}</td>
+                                            <td>{{ i.is_top }}</td>
+                                            <td>{{ i.is_news }}</td>
+                                            <td>{{ i.date }}</td>
+                                            <td>{{ i.bio }}</td>
+                                            <td>{{ i.author }}</td>
+                                            <td><a href="{% url 'update-report' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                            <td><a href="{% url 'delete-report' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'add-report' %}"><button class="btn btn-success">Add Report</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
