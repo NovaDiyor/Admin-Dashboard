@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Club</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Number</th>
+                                        <th scope="col">Position / Role</th>
+                                        <th scope="col">Is Staff</th>
+                                        <th scope="col">Birth</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Goals</th>
+                                        <th scope="col">Minute</th>
+                                        <th scope="col">Update</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in player %}
+                                        <tr>
+                                            <td>{{ i.club.name }}</td>
+                                            <td>{{ i.name }}</td>
+                                            <td>{{ i.l_name }}</td>
+                                            <td>{{ i.number }}</td>
+                                            <td>{{ i.get_position_display }}</td>
+                                            <td>{{ i.is_staff }}</td>
+                                            <td>{{ i.birth }}</td>
+                                            <td><img alt="{{ i.img }}" src="{{ i.img.url }}" class="rounded-circle" width="50" data-toggle="tooltip"></td>
+                                            {% if is_staff == False %}
+                                                <td>{{ i.goals }}</td>
+                                                <td>{{ i.minute }}</td>
+                                            {% else %}
+                                                <td>None</td>
+                                                <td>None</td>
+                                            {% endif %}
+                                            <td><a href="{% url 'update-player' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                            <td><a href="{% url 'delete-player' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'add-player' %}"><button class="btn btn-success">Add Player</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

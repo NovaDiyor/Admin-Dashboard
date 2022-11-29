@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'add-player' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="text" name="date" class="form-control datetimepicker">
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control select2" name="status">
+                                        <option value="1">Not Started</option>
+                                        <option value="2">Playing</option>
+                                        <option value="3">Finished</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control select2" name="host">
+                                        {% for i in club %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endofr %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control select2" name="guest">
+                                        {% for i in club %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endofr %}
+                                    </select>
+                                </div>
+                                <button class="btn btn-success">Save</button>
+                            </form>
+                            <a href="{% url 'game' %}"><button class="btn btn-success mt-2">Back</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

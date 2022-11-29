@@ -140,13 +140,17 @@ def statics_view(request):
 @login_required(login_url='login')
 def table_view(request):
     context = {
-        'table': Table.objects.all()
+        'table': Table.objects.all(),
+        'statics': Statics.objects.all(),
+        'league': League.objects.all()
     }
     if request.method == 'POST':
         league = request.POST.get('league')
         year = request.FILES.get('year')
-        statics = request.POST.get('statics')
-        Table.objects.create(league=league, year=year, statics=statics)
+        statics = request.POST.getlist('statics')
+        t = Table.objects.create(league=league, year=year)
+        for i in statics:
+            t.statics.add(i)
         return redirect('table')
     return render(request, 'table.html', context)
 
@@ -411,6 +415,9 @@ def add_statics(request):
 
 @login_required(login_url='login')
 def add_player(request):
+    context = {
+        'club': Club.objects.all()
+    }
     if request.method == 'POST':
         club = request.POST.get('club')
         name = request.POST.get('name')
@@ -422,13 +429,15 @@ def add_player(request):
         img = request.FILES.get('img')
         if is_staff is None:
             is_staff = False
+        if number > 100:
+            number = 99
         Player.objects.create(
             club=club, name=name, l_name=l_name,
             number=number, position=position,
             is_staff=is_staff, birth=birth, img=img
         )
         return redirect('add-player')
-    return render(request, 'add-player.html')
+    return render(request, 'add-player.html', context)
 
 
 @login_required(login_url='login')
@@ -436,19 +445,15 @@ def add_game(request):
     if request.method == 'POST':
         date = request.POST.get('date')
         status = request.POST.get('status')
-        guest = request.POST.get('h_goal')
-        host = request.POST.get('passion')
-        guest_goal = request.POST.get('kross')
-        host_goal = request.POST.get('passes')
-        mvp = request.POST.get('mvp')
+        guest = request.POST.get('guest')
+        host = request.POST.get('host')
         Game.objects.create(
             date=date,
             status=status,
             host_id=host,
             guest_id=guest,
-            host_goal=host_goal,
-            guest_goal=guest_goal,
-            mvp_id=mvp
+            host_goal=0,
+            guest_goal=0,
         )
         return redirect('add-game')
     return render(request, 'add-game.html')

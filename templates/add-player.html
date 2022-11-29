@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'add-player' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control select2" name="club">
+                                        {% for i in club %}
+                                        <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="name" placeholder="Name" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="l_name" placeholder="Last Name" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="number" placeholder="Number" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control select2" name="position">
+                                        <option value="1">GK</option>
+                                        <option value="2">RB</option>
+                                        <option value="3">CB</option>
+                                        <option value="4">LB</option>
+                                        <option value="5">CMD</option>
+                                        <option value="6">MD</option>
+                                        <option value="7">RW</option>
+                                        <option value="8">LW</option>
+                                        <option value="9">ST</option>
+                                        <option value="10">Trainer</option>
+                                        <option value="11">Sub-Trainer</option>
+                                        <option value="12">Analytic</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="custom-switch">
+                                        <input type="checkbox" name="is-staff" value="True" class="custom-switch-input">
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">Is-Staff</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="birth" class="form-control datetimepicker">
+                                </div>
+                                <div class="custom-file mb-4">
+                                    <input type="file" name="logo" class="custom-file-input" id="customFile" required>
+                                    <label class="custom-file-label" for="customFile">Choose</label>
+                                </div>
+                                <button class="btn btn-success">Save</button>
+                            </form>
+                            <a href="{% url 'player' %}"><button class="btn btn-success mt-2">Back</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

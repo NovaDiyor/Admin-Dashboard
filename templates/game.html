@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Host</th>
+                                        <th scope="col">Guest</th>
+                                        <th scope="col">Host Goal</th>
+                                        <th scope="col">Guest Goal</th>
+                                        <th scope="col">Mvp</th>
+                                        <th scope="col">Update</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in game %}
+                                        <tr>
+                                            <td>{{ i.date }}</td>
+                                            <td>{{ i.get_status_display }}</td>
+                                            <td>{{ i.host }}</td>
+                                            <td>{{ i.guest }}</td>
+                                            <td>{{ i.host_goal }}</td>
+                                            <td>{{ i.guest_goal }}</td>
+                                            <td>{{ i.mvp.name }}</td>
+                                            <td><a href="{% url 'update-game' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                            <td><a href="{% url 'delete-game' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'add-player' %}"><button class="btn btn-success">Add Player</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
