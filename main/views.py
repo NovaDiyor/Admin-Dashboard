@@ -444,6 +444,433 @@ def add_product(request):
         return redirect('add-product')
     return render(request, 'add-product', context)
 
+# update objects
+
+
+@login_required(login_url='login')
+def update_info(request, pk):
+    info = Info.objects.get(id=pk)
+    if request.method == 'POST':
+        logo = request.FILES.get('logo')
+        bio = request.POST.get('bio')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        insta = request.POST.get('insta')
+        tg = request.POST.get('tg')
+        fb = request.POST.get('fb')
+        yt = request.POST.get('yt')
+        tw = request.POST.get('tw')
+        info.logo = logo
+        info.bio = bio
+        info.phone = phone
+        info.email = email
+        info.insta = insta
+        info.tg = tg
+        info.fb = fb
+        info.yt = yt
+        info.tw = tw
+        info.save()
+        return redirect('info')
+    return render(request, 'update-info.html', {'info': Info.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_ads(request, pk):
+    context = {
+        'ads': Ads.objects.get(id=pk)
+    }
+    ads = Ads.objects.get(id=pk)
+    if request.method == 'POST':
+        logo = request.FILES.get('logo')
+        url = request.POST.get('url')
+        ads.logo = logo
+        ads.url = url
+        ads.save()
+        return redirect('ads')
+    return render(request, 'update-ads.html', context)
+
+
+@login_required(login_url='login')
+def update_slider(request, pk):
+    slider = Slider.objects.get(id=pk)
+    if request.method == 'POST':
+        img = request.FILES.get('img')
+        title = request.POST.get('title')
+        text = request.POST.get('text')
+        slider.img = img
+        slider.title = title
+        slider.text = text
+        slider.save()
+        return redirect('slider')
+    return render(request, 'update-slider.html', {'slider': Slider.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_report(request, pk):
+    report = Report.objects.get(id=pk)
+    if request.method == 'POST':
+        img = request.POST.get('img')
+        video = request.POST.get('video')
+        is_video = request.POST.get('is_video')
+        is_top = request.POST.get('is_top')
+        is_news = request.POST.get('is_news')
+        date = request.POST.get('date')
+        bio = request.POST.get('bio')
+        author = request.POST.get('author')
+        report.img = img
+        report.video = video
+        report.is_video = is_video
+        report.is_top = is_top
+        report.is_news = is_news
+        report.date = date
+        report.bio = bio
+        report.author = author
+        report.save()
+        return redirect('report')
+    return render(request, 'update-report.html', {'report': Report.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_league(request, pk):
+    context = {
+        'league': League.objects.get(id=pk)
+    }
+    league = League.objects.get(id=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        logo = request.FILES.get('logo')
+        league.name = name
+        if logo:
+            league.logo = logo
+        else:
+            league.logo = league.logo
+        league.save()
+        return redirect('league')
+    return render(request, 'update-league.html', context)
+
+
+@login_required(login_url='login')
+def update_club(request, pk):
+    context = {
+        'club': Club.objects.get(id=pk),
+        'league': League.objects.all(),
+    }
+    club = Club.objects.get(id=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        logo = request.POST.get('logo')
+        league = request.POST.get('league')
+        club.name = name
+        if logo:
+            club.logo = logo
+        else:
+            club.logo = club.logo
+        club.league = league
+        club.save()
+        return redirect('club')
+    return render(request, 'update-club.html', context)
+
+
+@login_required(login_url='login')
+def update_statics(request, pk):
+    context = {
+        'club': Club.objects.all(),
+        'statics': Statics.objects.get(id=pk)
+    }
+    statics = Statics.objects.get(id=pk)
+    if request.method == 'POST':
+        request = request.POST.get
+        club = request('club')
+        game = request('game')
+        win = request('win')
+        draw = request('draw')
+        lose = request('lose')
+        score = request('score')
+        conceded = request('conceded')
+        point = request('point')
+        statics.club = club
+        statics.game = game
+        statics.win = win
+        statics.draw = draw
+        statics.lose = lose
+        statics.score = score
+        statics.conceded = conceded
+        statics.point = point
+        statics.save()
+        return redirect('statics')
+    return render(request, 'update-statics.html', context)
+
+
+@login_required(login_url='login')
+def update_table(request, pk):
+    context = {
+        'league': League.objects.all(),
+        'statics': Statics.objects.all(),
+        'table': Table.objects.get(id=pk)
+    }
+    table = Table.objects.get(id=pk)
+    if request.method == 'POST':
+        league = request.POST.get('league')
+        year = request.POST.get('year')
+        statics = request.POST.getlist('statics')
+        table.league = league
+        table.year = year
+        for i in statics:
+            st = Statics.objects.get(id=i)
+            table.statics.add(st)
+        table.save()
+        return redirect('table')
+    return render(request, 'update-table.html', context)
+
+
+@login_required(login_url='login')
+def update_player(request, pk):
+    player = Player.objects.get(id=pk)
+    if request.method == 'POST':
+        club = request.POST.get('club')
+        name = request.POST.get('name')
+        l_name = request.POST.get('l_name')
+        number = request.POST.get('number')
+        position = request.POST.get('position')
+        is_staff = request.POST.get('is_staff')
+        birth = request.POST.get('birth')
+        img = request.POST.get('img')
+        goals = request.POST.get('goals')
+        player.club = club
+        player.name = name
+        player.l_name = l_name
+        player.number = number
+        player.position = position
+        player.is_staff = is_staff
+        player.birth = birth
+        player.img = img
+        player.goals = goals
+        player.save()
+        return redirect('player')
+    return render(request, 'update-player.html', {'player': Player.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_game(request, pk):
+    context = {
+        'game': Game.objects.get(id=pk),
+        'player': Player.objects.all()
+    }
+    game = Game.objects.get(id=pk)
+    if request.method == 'POST':
+        request = request.POST.get
+        date = request('date')
+        status = request('status')
+        host = request('host')
+        guest = request('guest')
+        host_g = request('host-g')
+        guest_g = request('guest-g')
+        mvp = request('mvp')
+        game.date = date
+        game.status = status
+        game.host = host
+        game.guest = guest
+        game.host_goal = host_g
+        game.guest_goal = guest_g
+        game.mvp = mvp
+        game.save()
+        return redirect('game')
+    return render(request, 'update-game.html', context)
+
+
+@login_required(login_url='login')
+def update_line(request, pk):
+    context = {
+        'club': Club.objects.all(),
+        'team': Player.objects.all(),
+        'game': Game.objects.all(),
+        'line': Line.objects.get(id=pk)
+    }
+    line = Line.objects.get(id=pk)
+    if request.method == 'POST':
+        club = request.POST.get('club')
+        team = request.POST.getlist('team')
+        game = request.POST.get('game')
+        line.club = club
+        for i in team:
+            player = Player.objects.get(id=i)
+            line.team.add(player)
+        line.game = game
+        line.save()
+        return redirect('line')
+    return render(request, 'update-line.html', context)
+
+
+@login_required(login_url='login')
+def update_passes(request, pk):
+    passes = Passes.objects.get(id=pk)
+    if request.method == 'POST':
+        all = request.POST.get('all')
+        successful = request.POST.getlist('successful')
+        percent = request.POST.get('percent')
+        club = request.POST.get('club')
+        game = request.POST.getlist('game')
+        status = request.POST.getlist('status')
+        passes.all = all
+        passes.successful = successful
+        passes.percent = percent
+        passes.club = Club.objects.all(id=club)
+        passes.game = Game.objects.all(id=game)
+        passes.status = status
+        passes.save()
+        return redirect('passes')
+    return render(request, 'update-passes.html', {'passes': Passes.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_subs(request, pk):
+    context = {
+        'squad': Player.objects.all(),
+        'game': Game.objects.all(),
+        'line': Player.objects.all(),
+        'subs': Substitute.objects.get(id=pk)
+    }
+    subs = Substitute.objects.get(id=pk)
+    if request.method == 'POST':
+        squad = request.POST.get('squad')
+        game = request.POST.get('game')
+        line = request.POST.get('line')
+        minute = request.POST.get('minute')
+        subs.squad = squad
+        subs.game = game
+        subs.line = line
+        subs.minute = minute
+        return redirect('subs')
+    return render(request, 'update-subs.html', context)
+
+
+@login_required(login_url='login')
+def update_goal(request, pk):
+    context = {
+        'player': Player.objects.all(),
+        'club': Club.objects.all(),
+        'game': Game.objects.all(),
+        'goal': Goal.objects.get(id=pk)
+    }
+    goal = Goal.objects.get(id=pk)
+    if request.method == 'POST':
+        minute = request.POST.get('minute')
+        player = request.POST.get('player')
+        club = request.POST.get('club')
+        game = request.POST.get('game')
+        goals = request.POST.get('goal')
+        goal.minute = minute
+        goal.player = player
+        goal.club = club
+        goal.game = game
+        pl = Player.objects.get(id=player)
+        cl = Club.objects.get(id=club)
+        gm = Game.objects.get(id=game)
+        st = Statics.objects.get(club_id=club)
+        if pl.club == cl:
+            if cl == gm.host:
+                if goals == 'Fair':
+                    goal.save()
+                elif goals == 'Unfair':
+                    pl.goal -= 1
+                    st.score -= 1
+                    gm.host_goal -= 1
+                    goal.save()
+                else:
+                    return redirect('update-goal')
+            elif cl == gm.guest:
+                if goals == 'Fair':
+                    goal.save()
+                elif goals == 'Unfair':
+                    pl.goal -= 1
+                    st.score -= 1
+                    gm.guest_goal -= 1
+                    goal.save()
+                else:
+                    return redirect('update-goal')
+            else:
+                return redirect('update-goal')
+        return redirect('goal')
+    return render(request, 'update-goal.html', context)
+
+
+@login_required(login_url='login')
+def update_detail(request, pk):
+    context = {
+        'detail': Detail.objects.get(id=pk)
+    }
+    detail = Detail.objects.get(id=pk)
+    if request.method == 'POST':
+        details = request.POST.get('detail')
+        img = request.FILES.get('img')
+        is_img = request.POST.get('is_img')
+        is_order = request.POST.get('is_order')
+        detail.details = details
+        detail.img = img
+        detail.is_img = is_img
+        detail.is_order = is_order
+        detail.save()
+        return redirect('detail')
+    return render(request, 'update-detail.html', context)
+
+
+@login_required(login_url='login')
+def update_product(request, pk):
+    pro = Product.objects.get(id=pk)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        bio = request.POST.getlist('bio')
+        price = request.POST.get('price')
+        bonus = request.POST.get('bonus')
+        info = request.POST.getlist('info')
+        available = request.POST.getlist('available')
+        rating = request.POST.get('rating')
+        pro.name = name
+        pro.bio = bio
+        pro.price = price
+        pro.bonus = bonus
+        pro.available = available
+        pro.rating = rating
+        pro.info.clear()
+        for i in info:
+            o = Detail.objects.get(id=i)
+            pro.info.add(o)
+        pro.save()
+        return redirect('product')
+    return render(request, 'update-product.html', {'product': Product.objects.get(id=pk)})
+
+
+@login_required(login_url='login')
+def update_chat(request, pk):
+    context = {
+        'chat': Chat.objects.get(id=pk)
+    }
+    chats = Chat.objects.get(id=pk)
+    if request.method == 'POST':
+        chat = request.POST.get('chat')
+        chats.chat = chat
+        chats.save()
+        return redirect('chat')
+    return render(request, 'update-chat.html', context)
+
+
+@login_required(login_url='login')
+def update_telegram(request, pk):
+    context = {
+        'telegram': Telegram.objects.get(id=pk)
+    }
+    telegrams = Telegram.objects.get(id=pk)
+    if request.method == 'POST':
+        bot_token = request.POST.get('bot_token')
+        chat = request.POST.getlist('chat')
+        telegrams.bot_token = bot_token
+        for i in chat:
+            chats = Chat.objects.get(id=i)
+            telegrams.chat.add(chats)
+        telegrams.save()
+        return redirect('telegram')
+    return render(request, 'update-telegram.html', context)
+
 #  delete objects
 
 

@@ -103,6 +103,7 @@ class Player(models.Model):
     birth = models.DateField()
     img = models.ImageField(upload_to='players/')
     goals = models.IntegerField(default=0)
+    minute = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if self.position == 10:
