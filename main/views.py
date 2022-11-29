@@ -117,13 +117,14 @@ def league_view(request):
 @login_required(login_url='login')
 def club_view(request):
     context = {
-        'club': Club.objects.all()
+        'club': Club.objects.all(),
+        'league': League.objects.all()
     }
     if request.method == 'POST':
         name = request.POST.get('name')
         logo = request.FILES.get('logo')
         league = request.POST.get('league')
-        Club.objects.create(name=name, logo=logo, league=league)
+        Club.objects.create(name=name, logo=logo, league_id=league)
         return redirect('club')
     return render(request, 'club.html', context)
 
@@ -335,7 +336,6 @@ def add_report(request):
             is_news = False
         if is_top is None:
             is_top = False
-        print(img, video)
         Report.objects.create(img=img, video=video, is_video=is_video, is_top=is_top, is_news=is_news, date=date, bio=bio, author=author)
         return redirect('add-report')
     return render(request, 'add-report.html')
@@ -343,21 +343,70 @@ def add_report(request):
 
 @login_required(login_url='login')
 def add_statics(request):
+    context = {
+        'club': Club.objects.all()
+    }
     if request.method == 'POST':
-        club = request.POST.get('club')
-        game = request.POST.get('game')
+        cb = request.POST.get('club')
+        gm = request.POST.get('game')
         win = request.POST.get('win')
         draw = request.POST.get('draw')
         lose = request.POST.get('lose')
         score = request.POST.get('score')
         conceded = request.POST.get('conceded')
-        point = request.POST.get('point')
-        Statics.objects.create(
-            club_id=club, game=game, win=win,
-            draw=draw, lose=lose, score=score,
-            conceded=conceded, point=point)
-        return redirect('add-statics')
-    return render(request, 'add-statics.html')
+        point = 0
+        club = Club.objects.get(id=cb)
+        game = Game.objects.filter(status=3)
+        if game:
+            for i in game:
+                if i.host == club:
+                    if i.host_goal > i.guest_goal:
+                        score += i.host_goal
+                        conceded += i.guest_goal
+                        point += 3
+                    elif i.host_goal == i.guest_goal:
+                        score += i.host_goal
+                        conceded += i.guest_goal
+                        point += 1
+                    elif i.host_goal < i.guest_goal:
+                        score += i.host_goal
+                        conceded += i.guest_goal
+                    else:
+                        pass
+                elif i.guest == club:
+                    if i.guest_goal > i.host_goal:
+                        score += i.guest_goal
+                        conceded += i.host_goal
+                        point += 3
+                    elif i.host_goal == i.guest_goal:
+                        score += i.guest_goal
+                        conceded += i.host_goal
+                        point += 1
+                    elif i.guest_goal < i.host_goal:
+                        score += i.guest_goal
+                        conceded += i.host_goal
+                    else:
+                        pass
+                else:
+                    pass
+        else:
+            pass
+        if int(win) > 0:
+            for i in range(int(win)):
+                point += 3
+        if int(draw) > 0:
+            for i in range(int(draw)):
+                point += 1
+        overall = int(win) + int(draw) + int(lose)
+        if gm == overall:
+            Statics.objects.create(
+                club_id=cb, game=gm, win=win,
+                draw=draw, lose=lose, score=score,
+                conceded=conceded, point=point)
+            return redirect('add-statics')
+        else:
+            return redirect('statics')
+    return render(request, 'add-statics.html', context)
 
 
 @login_required(login_url='login')

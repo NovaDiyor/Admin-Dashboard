@@ -70,16 +70,6 @@ class Statics(models.Model):
     conceded = models.IntegerField(default=0)
     point = models.IntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        all = int(self.win) + int(self.draw) + int(self.lose)
-        try:
-            if self.game == all:
-                super(Statics, self).save(*args, **kwargs)
-            else:
-                super(Statics, self).delete(*args, **kwargs)
-        except:
-            super(Statics, self).clean()
-
 
 class Table(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE)
@@ -154,17 +144,12 @@ class Line(models.Model):
 
 
 class Passes(models.Model):
+    name = models.CharField(max_length=210)
     all = models.IntegerField()
     successful = models.IntegerField()
     percent = models.IntegerField(null=True, blank=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=(
-        (1, 'passes'),
-        (2, 'long-passes'),
-        (3, 'helps'),
-        (4, 'crosses')
-    ))
 
     def save(self, *args, **kwargs):
         percent = self.successful % self.all * 100

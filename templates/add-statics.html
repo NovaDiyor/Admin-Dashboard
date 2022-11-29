@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'add-statics' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control select2" name="club">
+                                        {% for i in club %}
+                                        <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="game" placeholder="Games" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="win" placeholder="Win" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="draw" placeholder="Draw" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="lose" placeholder="Lose" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="score" placeholder="Score" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="conceded" placeholder="Conceded" class="form-control phone-number" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </form>
+                            <a href="{% url 'statics' %}"><button class="btn btn-success mt-2">Back To Statics</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
