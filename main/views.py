@@ -159,7 +159,6 @@ def table_view(request):
 def player_view(request):
     context = {
         'player': Player.objects.all(),
-        'staff': Player.objects.filter(is_staff=True)
     }
     return render(request, 'player.html', context)
 
@@ -429,10 +428,11 @@ def add_player(request):
         img = request.FILES.get('img')
         if is_staff is None:
             is_staff = False
-        if number > 100:
-            number = 99
+        if int(number) > 100:
+            number = '99'
+        print(club)
         Player.objects.create(
-            club=club, name=name, l_name=l_name,
+            club_id=club, name=name, l_name=l_name,
             number=number, position=position,
             is_staff=is_staff, birth=birth, img=img
         )

@@ -8,7 +8,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <table class="table table-hover">
+                            <table class="table table-hover" style="text-align: center;">
                                 <thead>
                                     <tr>
                                         <th scope="col">Club</th>
@@ -36,7 +36,7 @@
                                             <td>{{ i.is_staff }}</td>
                                             <td>{{ i.birth }}</td>
                                             <td><img alt="{{ i.img }}" src="{{ i.img.url }}" class="rounded-circle" width="50" data-toggle="tooltip"></td>
-                                            {% if is_staff == False %}
+                                            {% if i.is_staff == False %}
                                                 <td>{{ i.goals }}</td>
                                                 <td>{{ i.minute }}</td>
                                             {% else %}
