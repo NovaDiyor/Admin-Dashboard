@@ -228,7 +228,7 @@ def subs_view(request):
             game = Game.objects.filter(host_id=club_p, status=1)
             if game is None:
                 game = Game.objects.filter(guest_id=club_p, status=1)
-            line = Line.objects.get(club_id=club_p, game_id=game)
+            line = Line.objects.filter(club_id=club_p, game_id=game)
             if line:
                 ln = line.team.get(id=player_id)
                 ln.team = player_id
@@ -236,7 +236,7 @@ def subs_view(request):
             Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
             return redirect('subs')
     context = {
-        'line': line,
+        'line': line.player.all(),
         'game': game,
         'players': player,
         'club': club
@@ -514,14 +514,15 @@ def add_game(request):
 
 @login_required(login_url='login')
 def add_passes(request):
+    game = None
     if request.method == 'POST':
         request = request.POST.get
         name = request('name')
         passes = request('pass')
         success = request('success')
-        percent = request('percent')
         club = request('club')
         game_id = request('game')
+        print(passes, name, success, club, game)
         if club is not None and club != '':
             club_post = Club.objects.get(id=club)
             game = Game.objects.filter(status=1, host=club_post)
@@ -530,8 +531,8 @@ def add_passes(request):
             if game:
                 Passes.objects.create(
                     all=passes, successful=success,
-                    percent=percent, club_id=club,
-                    game_id=game_id, name=name)
+                    club_id=club, game_id=game_id,
+                    name=name)
                 return redirect('add-passes')
     context = {
         'club': Club.objects.all(),

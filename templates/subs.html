@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-body">
                         {% if players %}
-                            <form action="{% url 'line' %}" method="post" style="display:flex; justify-content: center;">
+                            <form action="{% url 'subs' %}" method="post" style="display:flex; justify-content: center;">
                                 {% csrf_token %}
                                 <div class="form-group col-3 mr-2">
                                     <select class="form-control select2" name="game">
@@ -36,7 +36,7 @@
                                 </div>
                             </form>
                         {% else %}
-                            <form action="{% url 'line' %}" method="post" style="display: flex; justify-content: center;">
+                            <form action="{% url 'subs' %}" method="post" style="display: flex; justify-content: center;">
                                 {% csrf_token %}
                                  <div class="form-group col-3 mr-2">
                                     <select class="form-control select2" name="club">
