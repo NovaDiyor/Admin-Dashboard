@@ -212,18 +212,35 @@ def passes_view(request):
 
 @login_required(login_url='login')
 def subs_view(request):
-    context = {
-        'squad': Player.objects.all(),
-        'line': Line.objects.all()
-    }
+    line = None
+    game = None
+    player = None
+    club = Club.objects.all()
     if request.method == 'POST':
-        request = request.POST.get
-        squad = request('squad')
-        line = request('line')
-        game = request('game')
-        minute = request('minute')
-        Substitute.objects.create(squad_id=squad, game_id=game, line_id=line, minute=minute)
-        return redirect('subs')
+        line_id = request.POST.get('line')
+        game_id = request.POST.get('game')
+        player_id = request.POST.get('player')
+        club_id = request.POST.get('club')
+        minute = request.POST.get('minute')
+        if club_id:
+            club_p = Club.objects.get(id=club_id)
+            player = Player.objects.filter(club_id=club_p, is_staff=False)
+            game = Game.objects.filter(host_id=club_p, status=1)
+            if game is None:
+                game = Game.objects.filter(guest_id=club_p, status=1)
+            line = Line.objects.get(club_id=club_p, game_id=game)
+            if line:
+                ln = line.team.get(id=player_id)
+                ln.team = player_id
+                ln.save()
+            Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
+            return redirect('subs')
+    context = {
+        'line': line,
+        'game': game,
+        'players': player,
+        'club': club
+    }
     return render(request, 'subs.html', context)
 
 

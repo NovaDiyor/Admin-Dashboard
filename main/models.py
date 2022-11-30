@@ -158,8 +158,9 @@ class Passes(models.Model):
 
 
 class Substitute(models.Model):
-    squad = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_out')
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    squad = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_out')
     line = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_on')
     minute = models.IntegerField()
 
