@@ -286,9 +286,12 @@ def detail_view(request):
     }
     if request.method == 'POST':
         detail = request.POST.get('detail')
-        img = request.POST.get('img')
+        img = request.FILES.get('img')
         is_img = request.POST.get('is-img')
-        Detail.objects.create(detail=detail, img=img, is_img=is_img)
+        is_order = request.POST.get('is-order')
+        if is_order is None:
+            is_order = False
+        Detail.objects.create(detail=detail, img=img, is_img=is_img, is_order=is_order)
         return redirect('detail')
     return render(request, 'detail.html', context)
 
@@ -544,7 +547,8 @@ def add_passes(request):
 @login_required(login_url='login')
 def add_product(request):
     context = {
-        'detail': Detail.objects.all()
+        'detail': Detail.objects.filter(is_img=False),
+        'img': Detail.objects.filter(is_img=True)
     }
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -552,6 +556,7 @@ def add_product(request):
         price = request.POST.get('price')
         bonus = request.POST.get('bonus')
         detail = request.POST.getlist('detail')
+        img = request.POST.getlist('img')
         available = request.POST.get('available')
         if available is None:
             available = False
@@ -561,7 +566,9 @@ def add_product(request):
             available=available
         )
         for i in detail:
-            p.detail.add(i)
+            p.info.add(i)
+        for i in img:
+            p.image.add(i)
         return redirect('add-product')
     return render(request, 'add-product', context)
 
@@ -1086,13 +1093,13 @@ def delete_subs(request, pk):
 
 
 def delete_goal(request, pk):
-    goal = Substitute.objects.get(id=pk)
+    goal = Goal.objects.get(id=pk)
     goal.delete()
     return redirect('goal')
 
 
 def delete_detail(request, pk):
-    detail = Substitute.objects.get(id=pk)
+    detail = Detail.objects.get(id=pk)
     detail.delete()
     return redirect('detail')
 

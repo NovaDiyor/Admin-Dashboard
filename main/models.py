@@ -192,7 +192,8 @@ class Product(models.Model):
     bio = models.TextField()
     price = models.FloatField()
     bonus = models.FloatField(default=0)
-    info = models.ManyToManyField(Detail)
+    info = models.ManyToManyField(Detail, related_name='info')
+    image = models.ManyToManyField(Detail, related_name='image')
     available = models.BooleanField()
     rating = models.IntegerField(choices=(
         (1, '1-star'),

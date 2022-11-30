@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Bonus</th>
+                                        <th scope="col">Detail</th>
+                                        <th scope="col">Images</th>
+                                        <th scope="col">Update</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in product %}
+                                        <tr>
+                                            <td>{{ i.name }}</td>
+                                            <td>{{ i.bio }}</td>
+                                            <td><img alt="{{ i.img }}" src="{{ i.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></td>
+                                            <td>{{ i.price }}</td>
+                                            <td>{{ i.bonus }}</td>
+                                            <td><a href="{% url 'get-detail' i.id %}">{{ i.detail.first.detail }}</a></td>
+                                            <td><a href="{% url 'get-detail' i.id %}"><img alt="not found" src="{{ i.image.first.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></a></td>
+                                            <td><a href="{% url 'update-product' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                            <td><a href="{% url 'delete-product' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'add-info' %}"><button class="btn btn-success">Add Info</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
