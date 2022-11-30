@@ -158,7 +158,7 @@ def table_view(request):
 @login_required(login_url='login')
 def player_view(request):
     context = {
-        'player': Player.objects.alL(),
+        'player': Player.objects.all(),
         'staff': Player.objects.filter(is_staff=True)
     }
     return render(request, 'player.html', context)

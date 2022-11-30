@@ -21,14 +21,16 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <select class="form-control select2" name="host">
+                                    <label for="host">Host</label>
+                                    <select id="host" class="form-control select2" name="host">
                                         {% for i in club %}
                                             <option value="{{ i.id }}">{{ i.name }}</option>
                                         {% endofr %}
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <select class="form-control select2" name="guest">
+                                    <label for="Guest">Guest</label>
+                                    <select id="Guest" class="form-control select2" name="guest">
                                         {% for i in club %}
                                             <option value="{{ i.id }}">{{ i.name }}</option>
                                         {% endofr %}
