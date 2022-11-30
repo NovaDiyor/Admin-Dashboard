@@ -184,7 +184,7 @@ def line_view(request):
         players_id = request.POST.getlist('players_id')
         if club is not None and club_id != '':
             club_post = Club.objects.get(id=club_id)
-            players = Player.objects.filter(club=club_post)
+            players = Player.objects.filter(club=club_post, is_staff=False)
         if players_id is not None and players_id != '':
             if game_id is not None and game_id != '':
                 t = Line.objects.create(club_id=club_id, game_id=game_id)
@@ -311,11 +311,19 @@ def telegram_view(request):
 @login_required(login_url='login')
 def get_table(request, pk):
     table = Table.objects.get(id=pk)
-    t = table.statics.all()
     context = {
-        'table': t
+        'table': table.statics.all()
     }
     return render(request, 'get-table.html', context)
+
+
+@login_required(login_url='login')
+def get_line(request, pk):
+    line = Line.objects.get(id=pk)
+    context = {
+        'line': line.team.all()
+    }
+    return render(request, 'get-line.html', context)
 
 #  Koshish agar models di objectlari kop bosa koshishti ishlatdim
 

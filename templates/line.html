@@ -54,21 +54,21 @@
                 <table class="table table-hover" style="text-align: center">
                     <thead>
                         <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Logo</th>
-                            <th scope="col">League</th>
+                            <th scope="col">Club</th>
+                            <th scope="col">Game</th>
+                            <th scope="col">Line</th>
                             <th scope="col">Update</th>
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in club %}
+                        {% for i in line %}
                             <tr>
-                                <td>{{ i.name }}</td>
-                                <td><a href="#"><img alt="{{ i.logo }}" src="{{ i.logo.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></a></td>
-                                <td>{{ i.league.name }}</td>
-                                <td><a href="{% url 'update-club' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
-                                <td><a href="{% url 'delete-club' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                                <td>{{ i.club.name }}</td>
+                                <td>{{ i.game.host.name }} VS {{ i.game.guest.name }}</td>
+                                <td><a href="{% url 'get-line' i.id %}">{{ i.team.first.name }}</a></td>
+                                <td><a href="{% url 'update-line' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                <td><a href="{% url 'delete-line' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -77,12 +77,4 @@
         </div>
     </div>
 </main>
-<!--<script>-->
-<!--    const icon = document.querySelector('.player')-->
-<!--    const btn = document.querySelector('.player-input')-->
-<!--    -->
-<!--    btn.addEventListener('click',()=> {-->
-<!--        icon.classList.toggle(active)-->
-<!--    })-->
-<!--</script>-->
 {% endblock %}
