@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-info' info.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="custom-file mb-4">
+                                    <input type="file" name="logo" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="bio"  value="{{ info.bio }}" placeholder="Description" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="phone"  value="{{ info.phone }}" placeholder="Phone Number" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" name="email"  value="{{ info.email }}" placeholder="Email" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="insta"  value="{{ info.insta }}" placeholder="Insta link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="tg"  value="{{ info.tg }}" placeholder="Telegram link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="fb"  value="{{ info.fb }}"  placeholder="Facebook link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="tw"  value="{{ info.tw }}" placeholder="Twitter link" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="yt"  value="{{ info.yt }}" placeholder="Youtube link" class="form-control">
+                                </div>
+                                <button class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

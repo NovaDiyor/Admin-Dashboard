@@ -169,24 +169,33 @@ def game_view(request):
     context = {
         'game': Game.objects.all(),
     }
-    return render(request, 'player.html', context)
+    return render(request, 'game.html', context)
 
 
 @login_required(login_url='login')
 def line_view(request):
-    context = {
-        'line': Line.objects.all(),
-        'club': Club.objects.all(),
-        'team': Player.objects.all()
-    }
+    line = Line.objects.all()
+    club = Club.objects.all()
+    team = Player.objects.all()
+    players = None
     if request.method == 'POST':
-        club = request.POST.get('club')
-        team = request.POST.get('team')
-        game = request.POST.get('game')
-        w = Line.objects.create(club_id=club, game_id=game)
-        for i in team:
-            w.team.add(i)
-        return redirect('line')
+        club_id = request.POST.get('club')
+        game_id = request.POST.get('game_id')
+        players_id = request.POST.getlist('players_id')
+        if club is not None and club_id != '':
+            club_post = Club.objects.get(id=club_id)
+            players = Player.objects.filter(club=club_post)
+        if players_id is not None and players_id != '':
+            if game_id is not None and game_id != '':
+                t = Line.objects.create(club_id=club_id, game_id=game_id)
+                for i in t:
+                    t.team.add(i)
+    context = {
+        'line': line,
+        'club': club,
+        'team': team,
+        'players': players
+    }
     return render(request, 'line.html', context)
 
 
@@ -587,22 +596,34 @@ def update_slider(request, pk):
 def update_report(request, pk):
     report = Report.objects.get(id=pk)
     if request.method == 'POST':
-        img = request.POST.get('img')
+        img = request.FILES.get('img')
         video = request.POST.get('video')
-        is_video = request.POST.get('is_video')
-        is_top = request.POST.get('is_top')
-        is_news = request.POST.get('is_news')
+        is_video = request.POST.get('is-video')
+        is_top = request.POST.get('is-top')
+        is_news = request.POST.get('is-news')
         date = request.POST.get('date')
         bio = request.POST.get('bio')
         author = request.POST.get('author')
-        report.img = img
         report.video = video
+        report.bio = bio
+        report.author = author
+        if is_video is None:
+            is_video = False
+        if is_top is None:
+            is_top = False
+        if is_news is None:
+            is_news = False
+        if date:
+            report.date = date
+        else:
+            report.date = report.date
+        if img:
+            report.img = img
+        else:
+            report.img = report.img
         report.is_video = is_video
         report.is_top = is_top
         report.is_news = is_news
-        report.date = date
-        report.bio = bio
-        report.author = author
         report.save()
         return redirect('report')
     return render(request, 'update-report.html', {'report': Report.objects.get(id=pk)})

@@ -8,7 +8,7 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <table class="table table-hover">
+                            <table class="table table-hover" style="text-align: center;">
                                 <thead>
                                     <tr>
                                         <th scope="col">Date</th>
@@ -27,8 +27,8 @@
                                         <tr>
                                             <td>{{ i.date }}</td>
                                             <td>{{ i.get_status_display }}</td>
-                                            <td>{{ i.host }}</td>
-                                            <td>{{ i.guest }}</td>
+                                            <td>{{ i.host.name }}</td>
+                                            <td>{{ i.guest.name }}</td>
                                             <td>{{ i.host_goal }}</td>
                                             <td>{{ i.guest_goal }}</td>
                                             <td>{{ i.mvp.name }}</td>

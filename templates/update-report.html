@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-report' report.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="custom-file mb-4">
+                                    <input type="file" name="img" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose</label>
+                                </div>
+                                <div class="custom-file mb-4">
+                                    <input type="file" name="video"  value="{{ report.video }}" class="custom-file-input" id="customVideo">
+                                    <label class="custom-file-label" for="customVideo">Video</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="date"  class="form-control datetimepicker">
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        {%if report.is_video == True %}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-video" value="True" class="custom-switch-input" checked>
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%else%}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-video" value="True" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%endif%}
+                                    </div>
+                                    <div class="form-group">
+                                        {%if report.is_top == True %}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-top" value="True" class="custom-switch-input" checked>
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%else%}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-top" value="True" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%endif%}
+                                    </div>
+                                    <div class="form-group">
+                                         {%if report.is_news == True %}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-news" value="True" class="custom-switch-input" checked>
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%else%}
+                                            <label class="custom-switch">
+                                                <input type="checkbox" name="is-news" value="True" class="custom-switch-input">
+                                                <span class="custom-switch-indicator"></span>
+                                                <span class="custom-switch-description">Is-Video</span>
+                                            </label>
+                                        {%endif%}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="bio"  value="{{ report.bio }}" placeholder="Description / Text" class="form-control" >
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="author"  value="{{ report.author }}" placeholder="Author / Title" class="form-control" >
+                                </div>
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
