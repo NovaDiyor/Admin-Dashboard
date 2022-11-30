@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="main-content">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover" style="text-align: center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Club</th>
+                            <th scope="col">Game</th>
+                            <th scope="col">Win</th>
+                            <th scope="col">Draw</th>
+                            <th scope="col">Lose</th>
+                            <th scope="col">Score</th>
+                            <th scope="col">Conceded</th>
+                            <th scope="col">Point</th>
+                            <th scope="col">Update</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in table %}
+                            <tr>
+                                <td>{{ i.club.name }}</td>
+                                <td>{{ i.game }}</td>
+                                <td>{{ i.win }}</td>
+                                <td>{{ i.draw }}</td>
+                                <td>{{ i.lose }}</td>
+                                <td>{{ i.score }}</td>
+                                <td>{{ i.conceded }}</td>
+                                <td>{{ i.point }}</td>
+                                <td><a href="{% url 'update-statics' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                <td><a href="{% url 'delete-statics' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

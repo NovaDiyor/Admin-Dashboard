@@ -32,6 +32,7 @@ urlpatterns = [
     path('game/add/', add_game, name='add-game'),
     path('passes/add/', add_passes, name='add-passes'),
     path('product/add/', add_product, name='add-product'),
+    path('table/get/<int:pk>/', get_table, name='get-table'),
     path('info/update/<int:pk>/', update_info, name='update-info'),
     path('ads/update/<int:pk>/', update_ads, name='update-ads'),
     path('slider/update/<int:pk>/', update_slider, name='update-slider'),

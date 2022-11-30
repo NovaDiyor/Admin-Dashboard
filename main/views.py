@@ -146,9 +146,10 @@ def table_view(request):
     }
     if request.method == 'POST':
         league = request.POST.get('league')
-        year = request.FILES.get('year')
+        year = request.POST.get('year')
         statics = request.POST.getlist('statics')
-        t = Table.objects.create(league=league, year=year)
+        print(league, year, statics)
+        t = Table.objects.create(league_id=league, year=year)
         for i in statics:
             t.statics.add(i)
         return redirect('table')
@@ -166,7 +167,7 @@ def player_view(request):
 @login_required(login_url='login')
 def game_view(request):
     context = {
-        'game': Game.objects.alL(),
+        'game': Game.objects.all(),
     }
     return render(request, 'player.html', context)
 
@@ -297,6 +298,16 @@ def telegram_view(request):
         return redirect('telegram')
     return render(request, 'telegram.html', context)
 
+
+@login_required(login_url='login')
+def get_table(request, pk):
+    table = Table.objects.get(id=pk)
+    t = table.statics.all()
+    context = {
+        'table': t
+    }
+    return render(request, 'get-table.html', context)
+
 #  Koshish agar models di objectlari kop bosa koshishti ishlatdim
 
 
@@ -401,7 +412,9 @@ def add_statics(request):
             for i in range(int(draw)):
                 point += 1
         overall = int(win) + int(draw) + int(lose)
-        if gm == overall:
+        print(gm, overall)
+        if gm == str(overall):
+            print(gm)
             Statics.objects.create(
                 club_id=cb, game=gm, win=win,
                 draw=draw, lose=lose, score=score,
@@ -442,6 +455,9 @@ def add_player(request):
 
 @login_required(login_url='login')
 def add_game(request):
+    context = {
+        'club': Club.objects.all(),
+    }
     if request.method == 'POST':
         date = request.POST.get('date')
         status = request.POST.get('status')
@@ -456,7 +472,7 @@ def add_game(request):
             guest_goal=0,
         )
         return redirect('add-game')
-    return render(request, 'add-game.html')
+    return render(request, 'add-game.html', context)
 
 
 @login_required(login_url='login')
