@@ -176,7 +176,7 @@ def game_view(request):
 def line_view(request):
     line = Line.objects.all()
     club = Club.objects.all()
-    team = Player.objects.all()
+    game = None
     players = None
     if request.method == 'POST':
         club_id = request.POST.get('club')
@@ -185,6 +185,9 @@ def line_view(request):
         if club is not None and club_id != '':
             club_post = Club.objects.get(id=club_id)
             players = Player.objects.filter(club=club_post, is_staff=False)
+            game = Game.objects.filter(status=1, host=club_post)
+            if game is None:
+                game = Game.objects.filter(status=1, guest=club_post)
         if players_id is not None and players_id != '':
             if game_id is not None and game_id != '':
                 t = Line.objects.create(club_id=club_id, game_id=game_id)
@@ -193,7 +196,7 @@ def line_view(request):
     context = {
         'line': line,
         'club': club,
-        'team': team,
+        'game': game,
         'players': players
     }
     return render(request, 'line.html', context)
@@ -494,24 +497,29 @@ def add_game(request):
 
 @login_required(login_url='login')
 def add_passes(request):
-    context = {
-        'club': Club.objects.all(),
-        'game': Game.objects.all()
-    }
     if request.method == 'POST':
         request = request.POST.get
+        name = request('name')
         passes = request('pass')
         success = request('success')
         percent = request('percent')
         club = request('club')
-        game = request('game')
-        status = request('status')
-        Passes.objects.create(
-            all=passes, successful=success,
-            percent=percent, club_id=club,
-            game_id=game, status=status
-        )
-        return redirect('add-passes')
+        game_id = request('game')
+        if club is not None and club != '':
+            club_post = Club.objects.get(id=club)
+            game = Game.objects.filter(status=1, host=club_post)
+            if game is None:
+                game = Game.objects.filter(status=1, guest=club_post)
+            if game:
+                Passes.objects.create(
+                    all=passes, successful=success,
+                    percent=percent, club_id=club,
+                    game_id=game_id, name=name)
+                return redirect('add-passes')
+    context = {
+        'club': Club.objects.all(),
+        'game': game
+    }
     return render(request, 'add-passes.html', context)
 
 

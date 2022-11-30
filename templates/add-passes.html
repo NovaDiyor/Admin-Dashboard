@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            {% if game %}
+                                <form action="{% url 'add-passes' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <select class="form-control select2" name="game">
+                                            {% for i in game %}
+                                                <option value="{{ i.id }}">{{ i.host.name }} VS {{ i.guest.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'add-passes' %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <select class="form-control select2" name="club">
+                                            {% for i in club %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="name" placeholder="Type Of Pass" class="form-control phone-number" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="pass" placeholder="All Passes" class="form-control phone-number" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="success" placeholder="Successful Passes" class="form-control phone-number" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                </form>
+                            {% endif %}
+                            <a href="{% url 'passes' %}"><button class="btn btn-success mt-2">Back To Passes</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
