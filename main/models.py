@@ -143,13 +143,12 @@ class Line(models.Model):  # done
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
 
-class Passes(models.Model):
+class Passes(models.Model):  # +
     name = models.CharField(max_length=210)
     all = models.IntegerField()
     successful = models.IntegerField()
     percent = models.IntegerField(null=True, blank=True)
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         percent = self.successful % self.all * 100
@@ -157,7 +156,7 @@ class Passes(models.Model):
         super(Passes, self).save(*args, **kwargs)
 
 
-class Substitute(models.Model):
+class Substitute(models.Model):  # +
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     squad = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='player_out')
@@ -165,7 +164,7 @@ class Substitute(models.Model):
     minute = models.IntegerField()
 
 
-class Goal(models.Model):
+class Goal(models.Model):  # +
     minute = models.IntegerField()
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, blank=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, null=True, blank=True)
@@ -204,17 +203,17 @@ class Product(models.Model):  # done
     ), default=1)
 
 
-class Wishlist(models.Model):
+class Wishlist(models.Model):  # -
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 
-class OrderItem(models.Model):
+class OrderItem(models.Model):  # -
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
 
-class Order(models.Model):
+class Order(models.Model):  # -
     order_item = models.ManyToManyField(OrderItem)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=210)
@@ -236,6 +235,6 @@ class Chat(models.Model):  # done
     chat = models.CharField(max_length=1000)
 
 
-class Telegram(models.Model):
+class Telegram(models.Model):  # done
     bot_token = models.CharField(max_length=1000)
     chat = models.ManyToManyField(Chat)

@@ -31,7 +31,11 @@
                                             <td>{{ i.guest.name }}</td>
                                             <td>{{ i.host_goal }}</td>
                                             <td>{{ i.guest_goal }}</td>
-                                            <td>{{ i.mvp.name }}</td>
+                                            {% if mvp %}
+                                                <td>{{ i.mvp.name }}</td>
+                                            {% else %}
+                                                <td>Have Not Yet</td>
+                                            {% endif %}
                                             <td><a href="{% url 'update-game' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
                                             <td><a href="{% url 'delete-game' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                                         </tr>

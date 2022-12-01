@@ -13,7 +13,7 @@
                             <div class="form-group col-3 mr-2">
                                 <select class="form-control select2" name="game">
                                     {% for i in game %}
-                                        <option value="{{ i.id }}">{{ i.host }}</option>
+                                        <option value="{{ i.id }}">{{ i.host.name }} VS {{ i.guest.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -67,7 +67,7 @@
                                 <td>{{ i.club.name }}</td>
                                 <td>{{ i.game.host.name }} VS {{ i.game.guest.name }}</td>
                                 <td><a href="{% url 'get-line' i.id %}">{{ i.team.first.name }}</a></td>
-                                <td><a href="{% url 'update-line' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                <td><a href="{% url 'update-line' i .id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
                                 <td><a href="{% url 'delete-line' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                             </tr>
                         {% endfor %}

@@ -515,7 +515,6 @@ def add_player(request):
             is_staff = False
         if int(number) > 100:
             number = '99'
-        print(club)
         Player.objects.create(
             club_id=club, name=name, l_name=l_name,
             number=number, position=position,
@@ -552,29 +551,18 @@ def add_game(request):
 
 @login_required(login_url='login')
 def add_passes(request):
-    game = None
     if request.method == 'POST':
         request = request.POST.get
         name = request('name')
         passes = request('pass')
         success = request('success')
-        club = request('club')
-        game_id = request('game')
-        print(passes, name, success, club, game)
-        if club is not None and club != '':
-            club_post = Club.objects.get(id=club)
-            game = Game.objects.filter(status=1, host=club_post)
-            if game is None:
-                game = Game.objects.filter(status=1, guest=club_post)
-            if game:
-                Passes.objects.create(
-                    all=passes, successful=success,
-                    club_id=club, game_id=game_id,
-                    name=name)
-                return redirect('add-passes')
+        player = request('player')
+        Passes.objects.create(
+            all=passes, successful=success,
+            name=name, player_id=player)
+        return redirect('add-passes')
     context = {
-        'club': Club.objects.all(),
-        'game': game
+        'player': Player.objects.all(),
     }
     return render(request, 'add-passes.html', context)
 
