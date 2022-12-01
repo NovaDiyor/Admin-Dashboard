@@ -8,10 +8,10 @@
                 <div class="col-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <form action="{% url 'add-report' %}" method="post" enctype="multipart/form-data">
+                            <form action="{% url 'add-product' %}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="text" name="name" class="form-control">
+                                    <input type="text" name="name" placeholder="Name" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <input type="text" name="bio" placeholder="Description / Text" class="form-control" required>
@@ -39,7 +39,7 @@
                                 <div class="form-group">
                                     <select class="form-control selectric" name="img" multiple="">
                                         {% for i in img %}
-                                            <option value="{{ i.id }}"><img src="{{ i.img.url }}" alt="{{ i.img }}" width="10"></option>
+                                            <option value="{{ i.id }}">{{ i.id }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

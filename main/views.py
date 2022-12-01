@@ -291,7 +291,11 @@ def detail_view(request):
         is_order = request.POST.get('is-order')
         if is_order is None:
             is_order = False
-        Detail.objects.create(detail=detail, img=img, is_img=is_img, is_order=is_order)
+        if img is not None:
+            Detail.objects.create(detail=detail, img=img, is_img=is_img, is_order=is_order)
+        elif detail:
+            if detail != ' ':
+                Detail.objects.create(detail=detail, img=None, is_img=is_img, is_order=is_order)
         return redirect('detail')
     return render(request, 'detail.html', context)
 
@@ -589,7 +593,7 @@ def add_product(request):
         for i in img:
             p.image.add(i)
         return redirect('add-product')
-    return render(request, 'add-product', context)
+    return render(request, 'add-product.html', context)
 
 # update objects
 
