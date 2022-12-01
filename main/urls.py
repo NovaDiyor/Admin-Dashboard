@@ -36,6 +36,7 @@ urlpatterns = [
     path('line/get/<int:pk>/', get_line, name='get-line'),
     path('detail/get/<int:pk>/', get_detail, name='get-detail'),
     path('image/get/<int:pk>/', get_image, name='get-image'),
+    path('chat/get/<int:pk>/', get_chat, name='get-chat'),
     path('info/update/<int:pk>/', update_info, name='update-info'),
     path('ads/update/<int:pk>/', update_ads, name='update-ads'),
     path('slider/update/<int:pk>/', update_slider, name='update-slider'),

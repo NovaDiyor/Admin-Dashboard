@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="main-content">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover" style="text-align: center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Chat ID</th>
+                            <th scope="col">Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in chat %}
+                            <tr>
+                                <td>{{ i.chat }}</td>
+                                <td><a href="{% url 'update-chat' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

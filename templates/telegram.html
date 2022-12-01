@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="main-content">
+    <div class="section-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{% url 'telegram' %}" method="post" style="display:flex; justify-content: center;">
+                            {% csrf_token %}
+                            <div class="form-group col-3 mr-2">
+                                <input type="text" name="token" placeholder="Bot Token" class="form-control">
+                            </div>
+                            <div class="form-group col-3 mr-2">
+                                <select class="form-control selectric" name="chat" multiple="">
+                                    {% for i in chat %}
+                                        <option value="{{ i.id }}">{{ i.chat }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group mt-1 player-input">
+                                <button class="btn btn-success">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover" style="text-align: center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Bot Token</th>
+                            <th scope="col">Chat ID</th>
+                            <th scope="col">Update</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in telegram %}
+                            <tr>
+                                <td>{{ i.bot_token }}</td>
+                                <td><a href="{% url 'get-chat' i.id %}">{{ i.chat.first.chat }}</a></td>
+                                <td><a href="{% url 'update-telegram' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                <td><a href="{% url 'delete-telegram' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -323,7 +323,8 @@ def chat_view(request):
 @login_required(login_url='login')
 def telegram_view(request):
     context = {
-        'telegram': Telegram.objects.all()
+        'telegram': Telegram.objects.all(),
+        'chat': Chat.objects.all()
     }
     if request.method == 'POST':
         bot = request.POST.get('token')
@@ -370,6 +371,14 @@ def get_image(request, pk):
     }
     return render(request, 'get-detail.html', context)
 
+
+@login_required(login_url='login')
+def get_chat(request, pk):
+    chat = Telegram.objects.get(id=pk)
+    context = {
+        'chat': chat.chat.all(),
+    }
+    return render(request, 'get-chat.html', context)
 
 #  Koshish agar models di objectlari kop bosa koshishti ishlatdim
 
