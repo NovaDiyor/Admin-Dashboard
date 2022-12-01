@@ -26,11 +26,10 @@
                                         <tr>
                                             <td>{{ i.name }}</td>
                                             <td>{{ i.bio }}</td>
-                                            <td><img alt="{{ i.img }}" src="{{ i.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></td>
                                             <td>{{ i.price }}</td>
                                             <td>{{ i.bonus }}</td>
                                             <td><a href="{% url 'get-detail' i.id %}">{{ i.detail.first.detail }}</a></td>
-                                            <td><a href="{% url 'get-detail' i.id %}"><img alt="not found" src="{{ i.image.first.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></a></td>
+                                            <td><a href="{% url 'get-image' i.id %}"><img alt="not found" src="{{ i.image.first.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></a></td>
                                             <td><a href="{% url 'update-product' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
                                             <td><a href="{% url 'delete-product' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                                         </tr>

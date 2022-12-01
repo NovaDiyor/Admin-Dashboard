@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="main-content">
+    <div class="col-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                {% if detail %}
+                    <table class="table table-hover" style="text-align: center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in detail %}
+                                <tr>
+                                    <td>{{ i.detail }}</td>
+                                    <td><a href="{% url 'update-player' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% elif image %}
+                    <table class="table table-hover" style="text-align: center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in image %}
+                                <tr>
+                                    <td><img alt="not found" src="{{ i.img.url }}" class="rounded-circle" width="20" data-toggle="tooltip"></td>
+                                    <td><a href="{% url 'update-detail' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -348,6 +348,25 @@ def get_line(request, pk):
     }
     return render(request, 'get-line.html', context)
 
+
+@login_required(login_url='login')
+def get_detail(request, pk):
+    detail = Product.objects.get(id=pk)
+    context = {
+        'detail': detail.info.all(),
+    }
+    return render(request, 'get-detail.html', context)
+
+
+@login_required(login_url='login')
+def get_image(request, pk):
+    detail = Product.objects.get(id=pk)
+    context = {
+        'image': detail.image.all(),
+    }
+    return render(request, 'get-detail.html', context)
+
+
 #  Koshish agar models di objectlari kop bosa koshishti ishlatdim
 
 
