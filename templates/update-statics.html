@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-statics' statics.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control select2" name="club">
+                                        <option value="{{ statics.club.id }}">{{ statics.club.name }}</option>
+                                        {% for i in club %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="game"  value="{{ statics.game }}" placeholder="Games" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="win"  value="{{ statics.win }}" placeholder="Win Games" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="draw"  value="{{ statics.draw }}" placeholder="Draw Games" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="lose"  value="{{ statics.lose }}" placeholder="Lose Games" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="score"  value="{{ statics.score }}" placeholder="Scored Goals" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="conceded"  value="{{ statics.conceded }}"  placeholder="Conceded Goals" class="form-control">
+                                </div>
+                                <button class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

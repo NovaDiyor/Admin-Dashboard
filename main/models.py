@@ -7,7 +7,7 @@ class User(AbstractUser):
     number = models.IntegerField(null=True, blank=True)
 
 
-class Info(models.Model):
+class Info(models.Model):     # done
     logo = models.ImageField(upload_to='info/')
     bio = models.TextField()
     phone = models.IntegerField()
@@ -19,18 +19,18 @@ class Info(models.Model):
     tw = models.URLField()
 
 
-class Ads(models.Model):
+class Ads(models.Model):  # done
     logo = models.ImageField(upload_to='ads/')
     url = models.URLField()
 
 
-class Slider(models.Model):
+class Slider(models.Model):  # done
     img = models.ImageField(upload_to='slider/')
     title = models.CharField(max_length=210)
     text = models.TextField(null=True, blank=True)
 
 
-class Report(models.Model):
+class Report(models.Model):  # done
     img = models.ImageField(upload_to='report/', null=True, blank=True)
     video = models.FileField(upload_to='report/', null=True, blank=True)
     is_video = models.BooleanField(default=False)
@@ -49,18 +49,18 @@ class Report(models.Model):
         super(Report, self).save(*args, **kwargs)
 
 
-class League(models.Model):
+class League(models.Model):  # done
     name = models.CharField(max_length=210)
     logo = models.ImageField(upload_to='league/')
 
 
-class Club(models.Model):
+class Club(models.Model):  # done
     name = models.CharField(max_length=210)
     logo = models.ImageField(upload_to='club/')
     league = models.ForeignKey(League, on_delete=models.SET_NULL, null=True, blank=True)
 
 
-class Statics(models.Model):
+class Statics(models.Model):  # done
     club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, blank=True)
     game = models.IntegerField(default=0)
     win = models.IntegerField(default=0)
@@ -71,13 +71,13 @@ class Statics(models.Model):
     point = models.IntegerField(default=0)
 
 
-class Table(models.Model):
+class Table(models.Model):  # done
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     year = models.PositiveIntegerField()
     statics = models.ManyToManyField(Statics)
 
 
-class Player(models.Model):
+class Player(models.Model):  # done
     club = models.ForeignKey(Club, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=210)
     l_name = models.CharField(max_length=210)
@@ -127,7 +127,7 @@ class Player(models.Model):
         super(Player, self).save(*args, **kwargs)
 
 
-class Game(models.Model):
+class Game(models.Model):  # done
     date = models.DateTimeField()
     status = models.IntegerField(choices=((1, 'not-started'), (2, 'playing'), (3, 'played')))
     guest = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='guest')
@@ -137,7 +137,7 @@ class Game(models.Model):
     mvp = models.ForeignKey(Player, on_delete=models.SET_NULL, null=True, blank=True)
 
 
-class Line(models.Model):
+class Line(models.Model):  # done
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     team = models.ManyToManyField(Player)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

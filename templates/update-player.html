@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-player' player.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control select2" name="club">
+                                        <option value="{{ player.club.id }}">{{ player.club.name }}</option>
+                                        {% for i in club %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="name" value="{{ player.name }}" placeholder="Name" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="l-name" value="{{ player.l_name }}" placeholder="Last Name" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="number" value="{{ player.number }}" placeholder="Number" class="form-control phone-number" required>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control select2" name="position">
+                                        <option value="{{ player.position }}">{{ player.get_position_display }}</option>
+                                        <option value="1">GK</option>
+                                        <option value="2">RB</option>
+                                        <option value="3">CB</option>
+                                        <option value="4">LB</option>
+                                        <option value="5">CMD</option>
+                                        <option value="6">MD</option>
+                                        <option value="7">RW</option>
+                                        <option value="8">LW</option>
+                                        <option value="9">ST</option>
+                                        <option value="10">Trainer</option>
+                                        <option value="11">Sub-Trainer</option>
+                                        <option value="12">Analytic</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    {% if player.is_staff == True %}
+                                        <label class="custom-switch">
+                                            <input type="checkbox" name="is-staff" value="True" class="custom-switch-input" checked>
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">Is-Staff</span>
+                                        </label>
+                                    {% else %}
+                                        <label class="custom-switch">
+                                            <input type="checkbox" name="is-staff" value="True" class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">Is-Staff</span>
+                                        </label>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="birth" value="{{ player.date }}" class="form-control datepicker">
+                                </div>
+                                <div class="custom-file mb-4">
+                                    <input type="file" name="img" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose</label>
+                                </div>
+                                {% if player.is_staff == False %}
+                                    <div class="form-group">
+                                        <input type="number" name="goals" value="{{ player.goals }}" class="form-control">
+                                    </div>
+                                {% endif %}
+                                <button class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

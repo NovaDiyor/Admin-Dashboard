@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-table' table.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control selectric" name="league">
+                                        <option value="{{ table.league.id }}">{{ table.league.name }}</option>
+                                        {% for i in league %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control selectric" name="statics" multiple="">
+                                        <option value="True">None If You Choices This Statics Will Not Change</option>
+                                        {% for i in statics %}
+                                            <option value="{{ i.id }}">{{ i.club.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="year"  value="{{ table.year }}" placeholder="Year" class="form-control">
+                                </div>
+                                <button class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

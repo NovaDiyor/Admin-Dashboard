@@ -535,14 +535,17 @@ def add_game(request):
         status = request.POST.get('status')
         guest = request.POST.get('guest')
         host = request.POST.get('host')
-        Game.objects.create(
-            date=date,
-            status=status,
-            host_id=host,
-            guest_id=guest,
-            host_goal=0,
-            guest_goal=0,
-        )
+        if guest == host:
+            pass
+        else:
+            Game.objects.create(
+                date=date,
+                status=status,
+                host_id=host,
+                guest_id=guest,
+                host_goal=0,
+                guest_goal=0,
+            )
         return redirect('add-game')
     return render(request, 'add-game.html', context)
 
@@ -760,16 +763,28 @@ def update_statics(request, pk):
         score = request('score')
         conceded = request('conceded')
         point = request('point')
-        statics.club = club
-        statics.game = game
-        statics.win = win
-        statics.draw = draw
-        statics.lose = lose
-        statics.score = score
-        statics.conceded = conceded
-        statics.point = point
-        statics.save()
-        return redirect('statics')
+        print(win, draw, lose)
+        print(int(win) + int(draw) + int(lose))
+        overall = int(win) + int(draw) + int(lose)
+        print(game, overall)
+        if game == str(overall):
+            statics.club_id = club
+            statics.game = game
+            statics.win = win
+            statics.draw = draw
+            statics.lose = lose
+            statics.score = score
+            statics.conceded = conceded
+            point = 0
+            if int(win) > 0:
+                for i in range(int(win)):
+                    point += 3
+            if int(draw) > 0:
+                for i in range(int(draw)):
+                    point += 1
+            statics.point = point
+            statics.save()
+            return redirect('statics')
     return render(request, 'update-statics.html', context)
 
 
@@ -785,11 +800,18 @@ def update_table(request, pk):
         league = request.POST.get('league')
         year = request.POST.get('year')
         statics = request.POST.getlist('statics')
-        table.league = league
+        table.league_id = league
         table.year = year
-        for i in statics:
-            st = Statics.objects.get(id=i)
-            table.statics.add(st)
+        try:
+            if statics == True:
+                table.statics = table.statics
+            else:
+                for x in statics:
+                    st = Statics.objects.get(id=x)
+                    if st:
+                        table.statics.add(st)
+        except Exception as err:
+            print(err)
         table.save()
         return redirect('table')
     return render(request, 'update-table.html', context)
@@ -813,9 +835,16 @@ def update_player(request, pk):
         player.l_name = l_name
         player.number = number
         player.position = position
+        if is_staff is None:
+            is_staff = False
         player.is_staff = is_staff
         player.birth = birth
-        player.img = img
+        if img is None:
+            player.img = player.img
+        else:
+            player.img = img
+        if goals is None:
+            goals = 0
         player.goals = goals
         player.save()
         return redirect('player')
@@ -852,24 +881,34 @@ def update_game(request, pk):
 
 @login_required(login_url='login')
 def update_line(request, pk):
-    context = {
-        'club': Club.objects.all(),
-        'team': Player.objects.all(),
-        'game': Game.objects.all(),
-        'line': Line.objects.get(id=pk)
-    }
     line = Line.objects.get(id=pk)
+    club = Club.objects.all()
+    game = None
+    players = None
     if request.method == 'POST':
-        club = request.POST.get('club')
-        team = request.POST.getlist('team')
-        game = request.POST.get('game')
-        line.club = club
-        for i in team:
-            player = Player.objects.get(id=i)
-            line.team.add(player)
-        line.game = game
-        line.save()
-        return redirect('line')
+        club_id = request.POST.get('club')
+        game_id = request.POST.get('game')
+        players_id = request.POST.getlist('players')
+        if club is not None and club_id != '':
+            club_post = Club.objects.get(id=club_id)
+            players = Player.objects.filter(club=club_post, is_staff=False)
+            game = Game.objects.filter(status=1, host=club_post)
+            if game is None:
+                game = Game.objects.filter(status=1, guest=club_post)
+        if players_id is not None and players_id != '':
+            if game_id is not None and game_id != '':
+                line.club = club_id
+                line.game = game_id
+                for i in players_id:
+                    o = Player.objects.get(id=i)
+                    line.team.add(o)
+                    return redirect('line')
+    context = {
+        'line': line,
+        'club': club,
+        'game': game,
+        'players': players
+    }
     return render(request, 'update-line.html', context)
 
 
@@ -978,7 +1017,14 @@ def update_detail(request, pk):
         is_img = request.POST.get('is_img')
         is_order = request.POST.get('is_order')
         detail.details = details
-        detail.img = img
+        if img is None:
+            detail.img = detail.img
+        else:
+            detail.img = img
+        if is_img is None:
+            is_img = False
+        if is_order is None:
+            is_order = False
         detail.is_img = is_img
         detail.is_order = is_order
         detail.save()

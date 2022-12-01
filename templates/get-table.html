@@ -17,7 +17,6 @@
                             <th scope="col">Conceded</th>
                             <th scope="col">Point</th>
                             <th scope="col">Update</th>
-                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +31,6 @@
                                 <td>{{ i.conceded }}</td>
                                 <td>{{ i.point }}</td>
                                 <td><a href="{% url 'update-statics' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
-                                <td><a href="{% url 'delete-statics' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
