@@ -55,7 +55,13 @@ def reset(request):
 
 @login_required(login_url='login')
 def dashboard_view(request):
-    return render(request, 'dashboard.html')
+
+    context = {
+        'game': Game.objects.filter(status=3).order_by('-id')[:3],
+        'playing': Game.objects.filter(status=2),
+        'not': Game.objects.filter(status=1),
+    }
+    return render(request, 'dashboard.html', context)
 
 
 @login_required(login_url='login')
@@ -182,8 +188,15 @@ def line_view(request):
         club_id = request.POST.get('club')
         game_id = request.POST.get('game_id')
         players_id = request.POST.getlist('players_id')
+        club_f = club_id
+        if club_f is not None:
+            sm = Club.objects.get(id=club_f)
+            ff = {
+                'club_f': sm
+            }
+            return render(request, 'line.html', ff)
         if club is not None and club_id != '':
-            club_post = Club.objects.get(id=club_id)
+            club_post = Club.objects.get(id=club_f)
             players = Player.objects.filter(club=club_post, is_staff=False)
             game = Game.objects.filter(status=1, host=club_post)
             if game is None:
@@ -236,7 +249,7 @@ def subs_view(request):
             Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
             return redirect('subs')
     context = {
-        'line': line.player.all(),
+        'line': line.team.all(),
         'game': game,
         'players': player,
         'club': club
