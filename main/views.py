@@ -1,8 +1,8 @@
+from datetime import date, datetime
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
-from django.core.mail import send_mail
 
 
 def page_404(request):
@@ -165,7 +165,6 @@ def table_view(request):
         league = request.POST.get('league')
         year = request.POST.get('year')
         statics = request.POST.getlist('statics')
-        print(league, year, statics)
         t = Table.objects.create(league_id=league, year=year)
         for i in statics:
             t.statics.add(i)
@@ -191,31 +190,20 @@ def game_view(request):
 
 @login_required(login_url='login')
 def line_view(request):
-    line = Line.objects.all()
-    club = Club.objects.all()
-    game = None
-    players = None
-    if request.method == 'POST':
-        club_id = request.POST.get('club')
-        game_id = request.POST.get('game_id')
-        players_id = request.POST.getlist('players_id')
-        if club is not None and club_id != '':
-            club_post = Club.objects.get(id=club_id)
-            players = Player.objects.filter(club=club_post, is_staff=False)
-            game = Game.objects.filter(status=1, host=club_post)
-            if game is None:
-                game = Game.objects.filter(status=1, guest=club_post)
-        if players_id is not None and players_id != '':
-            if game_id is not None and game_id != '':
-                t = Line.objects.create(club_id=club_id, game_id=game_id)
-                for i in t:
-                    t.team.add(i)
     context = {
-        'line': line,
-        'club': club,
-        'game': game,
-        'players': players
+        'line': Line.objects.all(),
+        'club': Club.objects.all(),
+        'game': Game.objects.all(),
+        'players': Player.objects.all()
     }
+    if request.method == 'POST':
+        club = request.POST.get('club')
+        game = request.POST.get('game')
+        players = request.POST.getlist('player')
+        t = Line.objects.create(club_id=club, game_id=game)
+        for i in players:
+            t.team.add(i)
+        return redirect('line')
     return render(request, 'line.html', context)
 
 
@@ -229,41 +217,21 @@ def passes_view(request):
 
 @login_required(login_url='login')
 def subs_view(request):
-    line = None
-    game = None
-    player = None
-    club = Club.objects.all()
-    if request.method == 'POST':
-        line_id = request.POST.get('line')
-        game_id = request.POST.get('game')
-        player_id = request.POST.get('player')
-        club_id = request.POST.get('club')
-        minute = request.POST.get('minute')
-        if club_id:
-            club_p = Club.objects.get(id=club_id)
-            player = Player.objects.filter(club_id=club_p, is_staff=False)
-            game = Game.objects.filter(host_id=club_p, status=1)
-            if game is None:
-                game = Game.objects.filter(guest_id=club_p, status=1)
-            ln = []
-            for i in game:
-                line = Line.objects.get(
-                    club=club_p,
-                    game=i
-                )
-                ln.append(line)
-            # if line:
-            #     ln = line.team.get(id=player_id)
-            #     ln.team = player_id
-            #     ln.save()
-            # Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
-    context = {
-        'line': line,
-        'game': game,
-        'players': player,
-        'club': club
-    }
-    return render(request, 'subs.html', context)
+    dt = date.today()
+    game = Game.objects.filter(date__day=dt.day)
+    ln = []
+    for i in game:
+        line = Line.objects.get(game_id=i)
+        ln.append(line)
+    print(game)
+    print(dt)
+    # context = {
+    #     'line': line,
+    #     'game': game,
+    #     'players': player,
+    #     'club': club
+    # }
+    return render(request, 'subs.html')
 
 
 @login_required(login_url='login')
