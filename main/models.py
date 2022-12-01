@@ -172,7 +172,7 @@ class Goal(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
 
 
-class Detail(models.Model):
+class Detail(models.Model):  # done
     detail = models.CharField(max_length=210, null=True, blank=True)
     img = models.ImageField(upload_to='product/', null=True, blank=True)
     is_img = models.BooleanField(default=False)
@@ -187,7 +187,7 @@ class Detail(models.Model):
         super(Detail, self).save(*args, **kwargs)
 
 
-class Product(models.Model):
+class Product(models.Model):  # done
     name = models.CharField(max_length=210)
     bio = models.TextField()
     price = models.FloatField()
@@ -232,7 +232,7 @@ class Order(models.Model):
     ), default=0)
 
 
-class Chat(models.Model):
+class Chat(models.Model):  # done
     chat = models.CharField(max_length=1000)
 
 

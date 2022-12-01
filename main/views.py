@@ -1040,22 +1040,34 @@ def update_product(request, pk):
         bio = request.POST.getlist('bio')
         price = request.POST.get('price')
         bonus = request.POST.get('bonus')
-        info = request.POST.getlist('info')
-        available = request.POST.getlist('available')
+        info = request.POST.getlist('detail')
+        img = request.POST.getlist('img')
+        available = request.POST.get('available')
         rating = request.POST.get('rating')
         pro.name = name
         pro.bio = bio
         pro.price = price
         pro.bonus = bonus
+        if available is None:
+            available = False
         pro.available = available
         pro.rating = rating
         pro.info.clear()
         for i in info:
             o = Detail.objects.get(id=i)
             pro.info.add(o)
+        pro.image.clear()
+        for i in img:
+            o = Detail.objects.get(id=i)
+            pro.image.add(o)
         pro.save()
         return redirect('product')
-    return render(request, 'update-product.html', {'product': Product.objects.get(id=pk)})
+    context = {
+        'product': pro,
+        'detail': Detail.objects.filter(is_img=False),
+        'img': Detail.objects.filter(is_img=True)
+    }
+    return render(request, 'update-product.html', context)
 
 
 @login_required(login_url='login')
@@ -1075,7 +1087,8 @@ def update_chat(request, pk):
 @login_required(login_url='login')
 def update_telegram(request, pk):
     context = {
-        'telegram': Telegram.objects.get(id=pk)
+        'telegram': Telegram.objects.get(id=pk),
+        'chat': Chat.objects.all()
     }
     telegrams = Telegram.objects.get(id=pk)
     if request.method == 'POST':

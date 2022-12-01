@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-product' product.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="text" name="name" value="{{ product.name }}" placeholder="Name" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="bio" value="{{ product.bio }}" placeholder="Description / Text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    {% if product.available == True %}
+                                        <label class="custom-switch">
+                                            <input type="checkbox" name="available" value="True" class="custom-switch-input" checked>
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">Available</span>
+                                        </label>
+                                    {% else %}
+                                        <label class="custom-switch">
+                                            <input type="checkbox" name="available" value="True" class="custom-switch-input">
+                                            <span class="custom-switch-indicator"></span>
+                                            <span class="custom-switch-description">Available</span>
+                                        </label>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="price" value="{{ product.price }}" placeholder="Price" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="bonus" value="{{ product.bonus }}" placeholder="Bonus" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control selectric" name="detail" multiple="">
+                                        {% for i in detail %}
+                                            <option value="{{ i.id }}">{{ i.detail }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control selectric" name="img" multiple="">
+                                        {% for i in img %}
+                                            <option value="{{ i.id }}">{{ i.id }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
