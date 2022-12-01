@@ -92,6 +92,8 @@ class Player(models.Model):  # done
     is_staff = models.BooleanField(default=False)
     birth = models.DateField()
     img = models.ImageField(upload_to='players/')
+    sub_on = models.IntegerField(default=0)
+    sub_off = models.IntegerField(default=0)
     goals = models.IntegerField(default=0)
     minute = models.IntegerField(default=0)
 

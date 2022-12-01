@@ -11,7 +11,7 @@
                             <form action="{% url 'update-game' game.id %}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <input type="text" name="date" value="{{ game.date }}" class="form-control datetimepicker">
+                                    <input type="text" name="date" class="form-control datetimepicker">
                                 </div>
                                 <div class="form-group">
                                     <select class="form-control select2" name="status">
@@ -43,7 +43,7 @@
                                     <input type="number" value="{{ game.host_goal }}" name="host-g" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" value="{{ game.guest-goal }}" name="guest-g" class="form-control">
+                                    <input type="number" value="{{ game.guest_goal }}" name="guest-g" class="form-control">
                                 </div>
                                 <button class="btn btn-success">Save</button>
                             </form>

@@ -18,7 +18,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-3 mr-2" >
-                                    <select class="form-control" name="player">
+                                    <select class="form-control selectric" name="player" multiple="">
                                         {% for i in players %}
                                             <option value="{{ i.id }}">{{ i.name }}</option>
                                         {% endfor %}

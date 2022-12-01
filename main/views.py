@@ -55,11 +55,22 @@ def reset(request):
 
 @login_required(login_url='login')
 def dashboard_view(request):
-
+    total = 0
+    order = Order.objects.filter(status=3)
+    for i in order:
+        if i.bonus > 0:
+            total += i.order_item.quantity * i.order_item.product.bonus
+        elif i.bonus <= 0:
+            total += i.order_item.quantity * i.order_item.product.price
     context = {
         'game': Game.objects.filter(status=3).order_by('-id')[:3],
         'playing': Game.objects.filter(status=2),
         'not': Game.objects.filter(status=1),
+        'player': Player.objects.all().count(),
+        'club': Club.objects.all().count(),
+        'admin': User.objects.filter(status=2).count(),
+        'product': Order.objects.filter(status=3).count(),
+        'total': total
     }
     return render(request, 'dashboard.html', context)
 
@@ -188,15 +199,8 @@ def line_view(request):
         club_id = request.POST.get('club')
         game_id = request.POST.get('game_id')
         players_id = request.POST.getlist('players_id')
-        club_f = club_id
-        if club_f is not None:
-            sm = Club.objects.get(id=club_f)
-            ff = {
-                'club_f': sm
-            }
-            return render(request, 'line.html', ff)
         if club is not None and club_id != '':
-            club_post = Club.objects.get(id=club_f)
+            club_post = Club.objects.get(id=club_id)
             players = Player.objects.filter(club=club_post, is_staff=False)
             game = Game.objects.filter(status=1, host=club_post)
             if game is None:
@@ -241,15 +245,20 @@ def subs_view(request):
             game = Game.objects.filter(host_id=club_p, status=1)
             if game is None:
                 game = Game.objects.filter(guest_id=club_p, status=1)
-            line = Line.objects.filter(club_id=club_p, game_id=game)
-            if line:
-                ln = line.team.get(id=player_id)
-                ln.team = player_id
-                ln.save()
-            Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
-            return redirect('subs')
+            ln = []
+            for i in game:
+                line = Line.objects.get(
+                    club=club_p,
+                    game=i
+                )
+                ln.append(line)
+            # if line:
+            #     ln = line.team.get(id=player_id)
+            #     ln.team = player_id
+            #     ln.save()
+            # Substitute.objects.create(club=club_p, player=player, game_id=game_id, minute=minute, line_id=line_id)
     context = {
-        'line': line.team.all(),
+        'line': line,
         'game': game,
         'players': player,
         'club': club
@@ -870,12 +879,18 @@ def update_game(request, pk):
         mvp = request('mvp')
         game.date = date
         game.status = status
-        game.host = host
-        game.guest = guest
+        game.host_id = host
+        game.guest_id = guest
         game.host_goal = host_g
         game.guest_goal = guest_g
         game.mvp = mvp
         game.save()
+        if status == 3:
+            line = Line.objects.filter(game_id=game)
+            pl = line.team.all()
+            for i in pl:
+                i.minute += 90
+                i.save()
         return redirect('game')
     return render(request, 'update-game.html', context)
 
