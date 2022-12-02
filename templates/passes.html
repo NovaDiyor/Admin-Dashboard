@@ -17,7 +17,6 @@
                                         <th scope="col">All Passes</th>
                                         <th scope="col">Successful Passes</th>
                                         <th scope="col">Successful Percent</th>
-                                        <th scope="col">Game</th>
                                         <th scope="col">Update</th>
                                         <th scope="col">Delete</th>
                                     </tr>
@@ -27,10 +26,10 @@
                                         <tr>
                                             <td>{{ i.player.club.name }}</td>
                                             <td>{{ i.player.name }}</td>
+                                            <td>{{ i.name }}</td>
                                             <td>{{ i.all }}</td>
                                             <td>{{ i.successful }}</td>
                                             <td>{{ i.percent }}</td>
-                                            <td>{{ i.host.name }} VS {{ i.guest.name }}</td>
                                             <td><a href="{% url 'update-passes' i.id %}"><i class="align-middle" data-feather="edit-2"></i></a></td>
                                             <td><a href="{% url 'delete-passes' i.id %}"><i class="align-middle" data-feather="trash"></i></a></td>
                                         </tr>

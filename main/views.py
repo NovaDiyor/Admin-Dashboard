@@ -217,21 +217,10 @@ def passes_view(request):
 
 @login_required(login_url='login')
 def subs_view(request):
-    dt = date.today()
-    game = Game.objects.filter(date__day=dt.day)
-    ln = []
-    for i in game:
-        line = Line.objects.get(game_id=i)
-        ln.append(line)
-    print(game)
-    print(dt)
-    # context = {
-    #     'line': line,
-    #     'game': game,
-    #     'players': player,
-    #     'club': club
-    # }
-    return render(request, 'subs.html')
+    context = {
+        'subs': Substitute.objects.all()
+    }
+    return render(request, 'subs.html', context)
 
 
 @login_required(login_url='login')
@@ -341,6 +330,7 @@ def get_line(request, pk):
     context = {
         'line': line.team.all()
     }
+    print('context')
     return render(request, 'get-line.html', context)
 
 
@@ -585,6 +575,52 @@ def add_product(request):
         return redirect('add-product')
     return render(request, 'add-product.html', context)
 
+
+@login_required(login_url='login')
+def add_subs(request):
+    line = Line.objects.all()
+    ln = None
+    for i in line:
+        ln = i.team.all()
+    for i in ln:
+        print(i)
+    print(ln)
+    context = {
+        'line': ln,
+        'players': Player.objects.all(),
+        'club': Club.objects.all(),
+        'game': Game.objects.all(),
+    }
+    if request.method == 'POST':
+        club = request.POST.get('club')
+        player = request.POST.get('player')
+        game = request.POST.get('game')
+        line_id = request.POST.get('line')
+        minute = request.POST.get('minute')
+        cl = Club.objects.get(id=club)
+        pl = Player.objects.get(id=player)
+        print(line, line_id)
+        try:
+            if cl == pl.club:
+                gm = Game.objects.get(id=game)
+                ln = Line.objects.get(team=line)
+                print(ln)
+                if gm == ln.game:
+                    plo = Player.objects.get(id=line_id)
+                    pl.sub_on += 1
+                    plo.sub_off += 1
+                    pl.minute += minute - 90
+                    plo.minute += minute
+                    print(plo.minute, pl.minute)
+                    Substitute.objects.create(club_id=club, squad_id=player, line_id=line, game_id=game, minute=minute)
+                    return redirect('subs')
+                else:
+                    return redirect('subs')
+            else:
+                return redirect('subs')
+        except Exception as err:
+            print(f'error: {err}')
+    return render(request, 'add-subs.html', context)
 # update objects
 
 
@@ -869,14 +905,15 @@ def update_line(request, pk):
     if request.method == 'POST':
         club_id = request.POST.get('club')
         game_id = request.POST.get('game')
-        players_id = request.POST.getlist('players')
+        players_id = request.POST.getlist('player')
         if request.method == 'POST':
-            line.club = club_id
-            line.game = game_id
+            line.club_id = club_id
+            line.game_id = game_id
+            line.team.clear()
             for i in players_id:
                 o = Player.objects.get(id=i)
                 line.team.add(o)
-                return redirect('line')
+            return redirect('line')
     context = {
         'line': line,
         'club': Club.objects.all(),

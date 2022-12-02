@@ -1,41 +1,52 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
 {% block content %}
-
 <main class="main-content">
     <div class="section-body">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{% url 'update-line' line.id %}" method="post">
+                        <form action="{% url 'subs' %}" method="post">
                             {% csrf_token %}
-                             <div class="form-group">
+                            <div class="form-group">
                                 <select class="form-control select2" name="club">
-                                    <option value="{{ line.club.id }}">{{ line.club.name }}</option>
                                     {% for i in club %}
-                                        <option value="{{ i.id }}">{{ i.name }}</option>
+                                    <option value="{{ i.id }}">{{ i.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="form-group mb-3">
+                            <div class="form-group">
                                 <select class="form-control select2" name="game">
-                                    <option value="{{ line.game.id }}">{{ line.game.host.name }} VS {{ line.game.guest.name }}</option>
                                     {% for i in game %}
                                         <option value="{{ i.id }}">{{ i.host.name }} VS {{ i.guest.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="form-group mb-3">
-                                <select class="form-control selectric player" name="player" multiple="">
+                            <div class="form-group">
+                                <select class="form-control selectric" name="player" multiple="">
                                     {% for i in players %}
                                         <option value="{{ i.id }}">{{ i.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group">
+                                <select class="form-control select2" name="line">
+                                    {% for i in line %}
+                                        <option value="{{ i.id }}">{{ i.id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input name="minute" class="form-control" placeholder="Minute">
+                            </div>
+                            <div class="form-group mt-1 player-input">
                                 <button class="btn btn-success">Save</button>
                             </div>
                         </form>
+                        <div class="form-group mt-1 player-input">
+                                <a href="{% url 'subs' %}"><button class="btn btn-success">Return to Substitute Table</button></a>
+                        </div>
                     </div>
                 </div>
             </div>

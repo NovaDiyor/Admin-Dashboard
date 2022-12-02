@@ -153,7 +153,9 @@ class Passes(models.Model):  # done
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        percent = self.successful % self.all * 100
+        success = int(self.successful)
+        p = int(self.all)
+        percent = success / p * 100
         self.percent = percent
         super(Passes, self).save(*args, **kwargs)
 
