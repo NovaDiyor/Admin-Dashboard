@@ -63,7 +63,7 @@ def dashboard_view(request):
         elif i.bonus <= 0:
             total += i.order_item.quantity * i.order_item.product.price
     context = {
-        'game': Game.objects.filter(status=3).order_by('-id')[:3],
+        'game': Game.objects.filter(status=3).order_by('-id')[:2],
         'playing': Game.objects.filter(status=2),
         'not': Game.objects.filter(status=1),
         'player': Player.objects.all().count(),
@@ -801,14 +801,14 @@ def update_player(request, pk):
     if request.method == 'POST':
         club = request.POST.get('club')
         name = request.POST.get('name')
-        l_name = request.POST.get('l_name')
+        l_name = request.POST.get('l-name')
         number = request.POST.get('number')
         position = request.POST.get('position')
         is_staff = request.POST.get('is_staff')
         birth = request.POST.get('birth')
-        img = request.POST.get('img')
+        img = request.FILES.get('img')
         goals = request.POST.get('goals')
-        player.club = club
+        player.club_id = club
         player.name = name
         player.l_name = l_name
         player.number = number
@@ -866,32 +866,22 @@ def update_game(request, pk):
 @login_required(login_url='login')
 def update_line(request, pk):
     line = Line.objects.get(id=pk)
-    club = Club.objects.all()
-    game = None
-    players = None
     if request.method == 'POST':
         club_id = request.POST.get('club')
         game_id = request.POST.get('game')
         players_id = request.POST.getlist('players')
-        if club is not None and club_id != '':
-            club_post = Club.objects.get(id=club_id)
-            players = Player.objects.filter(club=club_post, is_staff=False)
-            game = Game.objects.filter(status=1, host=club_post)
-            if game is None:
-                game = Game.objects.filter(status=1, guest=club_post)
-        if players_id is not None and players_id != '':
-            if game_id is not None and game_id != '':
-                line.club = club_id
-                line.game = game_id
-                for i in players_id:
-                    o = Player.objects.get(id=i)
-                    line.team.add(o)
-                    return redirect('line')
+        if request.method == 'POST':
+            line.club = club_id
+            line.game = game_id
+            for i in players_id:
+                o = Player.objects.get(id=i)
+                line.team.add(o)
+                return redirect('line')
     context = {
         'line': line,
-        'club': club,
-        'game': game,
-        'players': players
+        'club': Club.objects.all(),
+        'game': Game.objects.all(),
+        'players': Player.objects.all()
     }
     return render(request, 'update-line.html', context)
 
@@ -900,21 +890,21 @@ def update_line(request, pk):
 def update_passes(request, pk):
     passes = Passes.objects.get(id=pk)
     if request.method == 'POST':
+        name = request.POST.get('name')
         all = request.POST.get('all')
-        successful = request.POST.getlist('successful')
-        percent = request.POST.get('percent')
-        club = request.POST.get('club')
-        game = request.POST.getlist('game')
-        status = request.POST.getlist('status')
+        successful = request.POST.get('successful')
+        player = request.POST.get('player')
+        passes.name = name
         passes.all = all
         passes.successful = successful
-        passes.percent = percent
-        passes.club = Club.objects.all(id=club)
-        passes.game = Game.objects.all(id=game)
-        passes.status = status
+        passes.player_id = player
         passes.save()
         return redirect('passes')
-    return render(request, 'update-passes.html', {'passes': Passes.objects.get(id=pk)})
+    context = {
+        'passes': passes,
+        'player': Player.objects.all()
+    }
+    return render(request, 'update-passes.html', context)
 
 
 @login_required(login_url='login')

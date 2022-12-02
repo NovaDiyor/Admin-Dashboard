@@ -145,7 +145,7 @@ class Line(models.Model):  # done
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
 
-class Passes(models.Model):  # +
+class Passes(models.Model):  # done
     name = models.CharField(max_length=210)
     all = models.IntegerField()
     successful = models.IntegerField()

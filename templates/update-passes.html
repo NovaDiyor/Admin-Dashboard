@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{% url 'update-passes' passes.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <select class="form-control select2" name="player">
+                                        <option value="{{ passes.player.id }}">{{ passes.player.name }}</option>
+                                        {% for i in player %}
+                                            <option value="{{ i.id }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="name" value="{{ passes.name }}" placeholder="Type Of Pass" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="pass" value="{{ passes.all }}" placeholder="All Passes" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number" name="success" value="{{ passes.successful }}" placeholder="Successful Passes" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-success">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

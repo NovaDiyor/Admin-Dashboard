@@ -173,22 +173,21 @@
                 </div>
             </div>
             <div class="row">
-            {% for i in game %}
-                <div class="col-12 col-sm-12 col-lg-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Last Game</h4>
-                            <h4 style="color: white">________________________________</h4>
-                            <h4>{{ i.host.league.name }}</h4>
+                {% for i in game %}
+                    <div class="col-12 col-sm-12 col-lg-6 text-center">
+                        <div class="card">
+                            <div class="card-header" style="display:flex; justify-content: space-between;">
+                                <h4>Last Game</h4>
+                                <h4>{{ i.host.league.name }}</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="row text-center"  style="display: flex; justify-content: center"><h1><img  width="50px" height="50px"  src="{{ i.host.logo.url }}">{{ i.host.name }} VS {{ i.guest.name }}<img style="margin-left: 10px;" src="{{ i.guest.logo.url }}" width="50px" height="50px"></h1></div>
+                                <h1 class="row" style="display: flex; justify-content: center;">{{ i.host_goal }} : {{ i.guest_goal }}</h1>
+                                <p>{{ i.date }}</p>
+                            </div>
                         </div>
-                      <div class="card-body text-center">
-                        <div class="row text-center ml-1"><h1 style="display: flex; justify-content: center"><img width="50px" height="50px"  src="{{ i.host.logo.url }}">{{ i.host.name }} VS {{ i.guest.name }}<img src="{{ i.guest.logo.url }}" width="50px" height="50px"></h1></div>
-                        <h1 class="row" style="display: flex; justify-content: center;">{{ i.host_goal }} : {{ i.guest_goal }}</h1>
-                        <p>{{ i.date }}</p>
-                      </div>
                     </div>
-                </div>
-              {% endfor %}
+                {% endfor %}
             </div>
 <!--            <div class="row">-->
 <!--                <div class="col-12">-->
@@ -336,96 +335,43 @@
 <!--                    </div>-->
 <!--                </div>-->
 <!--            </div>-->
-            <div class="row">
-                <div class="col-md-6 col-lg-12 col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Support Ticket</h4>
-                            <form class="card-header-form">
-                                <input type="text" name="search" class="form-control" placeholder="Search">
-                            </form>
-                        </div>
-                        <div class="card-body">
-                            <div class="support-ticket media pb-1 mb-3">
-                                <img src="assets/img/users/user-1.png" class="user-img mr-2" alt="">
-                                <div class="media-body ml-3">
-                                    <div class="badge badge-pill badge-success mb-1 float-right">Feature</div>
-                                    <span class="font-weight-bold">#89754</span>
-                                    <a href="javascript:void(0)">Please add advance table</a>
-                                    <p class="my-1">Hi, can you please add new table for advan...</p>
-                                    <small class="text-muted">Created by <span class="font-weight-bold font-13">John Deo</span>- 1 day ago</small>
-                                </div>
-                            </div>
-                            <div class="support-ticket media pb-1 mb-3">
-                                <img src="assets/img/users/user-2.png" class="user-img mr-2" alt="">
-                                <div class="media-body ml-3">
-                                    <div class="badge badge-pill badge-warning mb-1 float-right">Bug</div>
-                                    <span class="font-weight-bold">#57854</span>
-                                    <a href="javascript:void(0)">Select item not working</a>
-                                    <p class="my-1">please check select item in advance form not work...</p>
-                                    <small class="text-muted">Created by <span class="font-weight-bold font-13">Sarah Smith</span>&nbsp;& - 2 day ago</small>
-                                </div>
-                            </div>
-                            <div class="support-ticket media pb-1 mb-3">
-                                <img src="assets/img/users/user-3.png" class="user-img mr-2" alt="">
-                                <div class="media-body ml-3">
-                                    <div class="badge badge-pill badge-primary mb-1 float-right">Query</div>
-                                    <span class="font-weight-bold">#85784</span>
-                                    <a href="javascript:void(0)">Are you provide template in Angular?</a>
-                                    <p class="my-1">can you provide template in latest angular 8.</p>
-                                    <small class="text-muted">Created by <span class="font-weight-bold font-13">Ashton Cox</span>&nbsp;&nbsp; -2 day ago</small>
-                                </div>
-                            </div>
-                            <div class="support-ticket media pb-1 mb-3">
-                                <img src="assets/img/users/user-6.png" class="user-img mr-2" alt="">
-                                <div class="media-body ml-3">
-                                    <div class="badge badge-pill badge-info mb-1 float-right">Enhancement</div>
-                                    <span class="font-weight-bold">#25874</span>
-                                    <a href="javascript:void(0)">About template page load speed</a>
-                                    <p class="my-1">Hi, John, can you work on increase page speed of template...</p>
-                                    <small class="text-muted">Created by <span class="font-weight-bold font-13">Hasan Basri</span>&nbsp;&nbsp; -3 day ago</small>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="javascript:void(0)" class="card-footer card-link text-center small ">View All</a>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-12 col-xl-6">
-                    <div class="card">
-                    <div class="card-header">
-                      <h4>Top Scores</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Player Name</th>
-                                        <th>Player Club</th>
-                                        <th>Player Position</th>
-                                        <th>Minute</th>
-                                        <th>Goals</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for i in scores %}
-                                        <tr>
-                                            <td>{{ i.number }}</td>
-                                            <td>{{ i.name }}</td>
-                                            <td>{{ i.club.name }}</td>
-                                            <td>{{ i.get_position_display }}</td>
-                                            <td>{{ i.minute }}</td>
-                                            <td>{{ i.goals }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
+<!--            <div class="row">-->
+<!--                <div class="col-md-6 col-lg-12 col-xl-12">-->
+<!--                    <div class="card">-->
+<!--                    <div class="card-header">-->
+<!--                      <h4>Top Scores</h4>-->
+<!--                    </div>-->
+<!--                    <div class="card-body">-->
+<!--                        <div class="table-responsive">-->
+<!--                            <table class="table table-hover mb-0">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th>#</th>-->
+<!--                                        <th>Player Name</th>-->
+<!--                                        <th>Player Club</th>-->
+<!--                                        <th>Player Position</th>-->
+<!--                                        <th>Minute</th>-->
+<!--                                        <th>Goals</th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                    {% for i in scores %}-->
+<!--                                        <tr>-->
+<!--                                            <td>{{ i.number }}</td>-->
+<!--                                            <td>{{ i.name }}</td>-->
+<!--                                            <td>{{ i.club.name }}</td>-->
+<!--                                            <td>{{ i.get_position_display }}</td>-->
+<!--                                            <td>{{ i.minute }}</td>-->
+<!--                                            <td>{{ i.goals }}</td>-->
+<!--                                        </tr>-->
+<!--                                    {% endfor %}-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </section>
     </div>
 {% endblock %}
